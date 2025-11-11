@@ -522,7 +522,7 @@
     <div class="top-bar">
         <div class="top-bar-content">
             <div class="top-left">
-                <span>📅 Saturday - Sat 9.00 - 18.00</span>
+                <span>📅 Sunday - Sat 9.00 - 18.00</span>
                 <span>📍 Visa Consultants, Bali, Indonesia</span>
             </div>
             <div class="top-right">
