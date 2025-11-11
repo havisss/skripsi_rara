@@ -1,4 +1,4 @@
-<?= $this->extend('navbar') ?>
+<?= $this->extend('landing/navbar') ?>
 
 <?= $this->section('content') ?>
 
