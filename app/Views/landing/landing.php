@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heyvisa - Agency Visa Terpercaya Indonesia</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    /* Navbar Mengambang */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        background: transparent;
+    }
+
+    .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.78);
+        padding: 15px 5%;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+        font-size: 28px;
+        font-weight: bold;
+        color: #fff;
+        transition: color 0.3s ease;
+    }
+
+    .navbar.scrolled .logo {
+        color: #2563eb;
+    }
+
+    .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 35px;
+        align-items: center;
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 15px;
+    }
+
+    .navbar.scrolled .nav-menu a {
+        color: #333;
+    }
+
+    .nav-menu a:hover {
+        color: #fbbf24;
+    }
+
+    .cta-button {
+        background: #fbbf24;
+        color: #333;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+        background: #f59e0b;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+        background-image: url('assets/bg.jpg');
+        padding: 150px 5% 100px;
+        text-align: center;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-repeat: no-repeat;
+        /* Ini agar gambar tidak berulang */
+        background-attachment: fixed;
+        /* Ini agar gambar "tetap" di tempat saat scroll */
+        background-size: cover;
+        /* Ini agar gambar menutupi seluruh area */
+        background-position: center;
+    }
+
+    .hero-content {
+        max-width: 800px;
+    }
+
+    .hero h1 {
+        font-size: 52px;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .hero p {
+        font-size: 20px;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        background: #fbbf24;
+        color: #333;
+        padding: 15px 40px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #f59e0b;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: #fff;
+        padding: 15px 40px;
+        border: 2px solid #fff;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #fff;
+        color: #2563eb;
+    }
+
+    /* Services Section */
+    .services {
+        padding: 100px 5%;
+        background: #f8fafc;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        color: #1e293b;
+        margin-bottom: 15px;
+    }
+
+    .section-title p {
+        font-size: 18px;
+        color: #64748b;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        /* Penting untuk menjaga gambar tetap di dalam border radius */
+        background-size: cover;
+        background-position: center;
+        min-height: 280px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        color: #fff;
+        background-size: cover;
+        background-position: center;
+        /* Teks default jadi putih */
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        /* Efek hover yang lebih modern */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* CSS Baru untuk Kartu Destinasi */
+    .destination-flag {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        /* Sesuaikan ukuran bendera jika perlu */
+        height: auto;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Garis tipis di sekitar bendera */
+    }
+
+    .destination-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        /* Efek gradien hitam di bawafffh agar teks terbaca */
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .destination-content h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+
+    .destination-button {
+        background: #222;
+        /* Latar belakang tombol gelap seperti di gambar */
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: 1px solid #444;
+        /* Border tombol */
+    }
+
+    .destination-button:hover {
+        background: #fff;
+        /* Efek hover tombol */
+        color: #111;
+        transform: translateY(-2px);
+    }
+
+    /* Benefits Section */
+    .benefits {
+        padding: 100px 5%;
+        background: #fff;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .benefit-item {
+        text-align: center;
+    }
+
+    .benefit-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 35px;
+        color: #fff;
+    }
+
+    .benefit-item h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #1e293b;
+    }
+
+    .benefit-item p {
+        color: #64748b;
+    }
+
+    /* Process Section */
+    .process {
+        padding: 100px 5%;
+        background: #f8fafc;
+    }
+
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* GANTI blok .step LAMA Anda dengan yang INI */
+    .step {
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+        /* --- INI KODE BARU UNTUK ANIMASI --- */
+        opacity: 0;
+        /* Mulai dalam keadaan transparan (sembunyi) */
+        transform: translateY(30px);
+        /* Mulai 30px lebih rendah */
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        /* Transisi halus */
+    }
+
+    /* TAMBAHKAN INI: Atur jeda waktu agar muncul satu per satu */
+    .step:nth-child(1) {
+        transition-delay: 0.1s;
+    }
+
+    .step:nth-child(2) {
+        transition-delay: 0.2s;
+    }
+
+    .step:nth-child(3) {
+        transition-delay: 0.3s;
+    }
+
+    .step:nth-child(4) {
+        transition-delay: 0.4s;
+    }
+
+    /* TAMBAHKAN INI: Class .visible yang akan ditambahkan oleh JavaScript */
+    .step.visible {
+        opacity: 1;
+        /* Jadi terlihat */
+        transform: translateY(0);
+        /* Kembali ke posisi semula */
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #fbbf24;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .step h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #1e293b;
+    }
+
+    .step p {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    /* Testimonials Section */
+    .testimonials {
+        padding: 100px 5%;
+        background: #fff;
+    }
+
+    .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .testimonial-card {
+        background: #f8fafc;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .testimonial-rating {
+        color: #fbbf24;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-text {
+        color: #475569;
+        margin-bottom: 20px;
+        font-style: italic;
+        line-height: 1.7;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        background: #2563eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .author-info h4 {
+        font-size: 16px;
+        color: #1e293b;
+        margin-bottom: 3px;
+    }
+
+    .author-info p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 100px 5%;
+        background-image: url('assets/logo-sosmed/footer.webp');
+        text-align: center;
+        color: #fff;
+    }
+
+    .cta-section h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+    }
+
+    .cta-section p {
+        font-size: 18px;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+
+    /* Footer Baru (Minimalis) */
+    .footer {
+        background: #fff;
+        /* Latar belakang putih */
+        color: #555;
+        /* Warna teks abu-abu gelap */
+        padding: 80px 5% 40px;
+        border-top: 1px solid #eee;
+        /* Garis tipis di atas footer */
+    }
+
+    .footer-content {
+        display: grid;
+        /* Grid 4 kolom, kolom pertama lebih besar */
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-section h3 {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #111;
+        /* Judul section hitam */
+        font-weight: 600;
+    }
+
+    /* Kolom 1: Logo & Info */
+    .footer-about .footer-logo {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2563eb;
+        /* Warna biru untuk logo (sesuaikan jika Anda pakai gambar) */
+        margin-bottom: 15px;
+    }
+
+    .footer-about .footer-tagline {
+        font-size: 18px;
+        color: #2563eb;
+        /* Warna biru untuk tagline */
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .footer-about .footer-details {
+        font-size: 13px;
+        color: #64748b;
+        /* Warna teks abu-abu */
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    /* Kolom 2 & 3: Links */
+    .footer-links a {
+        display: block;
+        text-decoration: none;
+        color: #64748b;
+        margin-bottom: 12px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #2563eb;
+        padding-left: 5px;
+    }
+
+    /* Kolom 4: Kontak */
+    .footer-contact p {
+        color: #64748b;
+        margin-bottom: 12px;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    /* Bagian Bawah: Garis, Ikon, Copyright */
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 60px auto 0;
+        text-align: center;
+    }
+
+    .footer-hr {
+        border: 0;
+        height: 1px;
+        background-color: #e2e8f0;
+        /* Warna garis abu-abu muda */
+        margin-bottom: 30px;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        /* Jarak antar ikon */
+        margin-bottom: 30px;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e2e8f0;
+        /* Border abu-abu muda */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .social-link img {
+        width: 50px;
+        height: 50px;
+
+        /* Ikon agak pudar */
+        transition: opacity 0.3s ease;
+    }
+
+    .social-link:hover {
+        border-color: #2563eb;
+        /* Border jadi biru saat hover */
+        background: #ffffffff;
+        /* Latar belakang biru sangat muda */
+    }
+
+    .social-link:hover img {
+        opacity: 1;
+        /* Ikon jadi jelas */
+    }
+
+    .copyright {
+        color: #94a3b8;
+        /* Warna teks copyright */
+        font-size: 13px;
+    }
+
+    /* Responsive untuk HP */
+    @media (max-width: 992px) {
+        .footer-content {
+            /* Ubah jadi 2 kolom di tablet */
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .footer-about {
+            /* Kolom 'about' akan membentang penuh 2 kolom */
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .footer-content {
+            /* Ubah jadi 1 kolom di HP */
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hamburger {
+            display: flex;
+        }
+
+        .nav-menu {
+            position: fixed;
+            left: -100%;
+            top: 70px;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.98);
+            width: 100%;
+            text-align: center;
+            transition: 0.3s;
+            padding: 30px 0;
+            gap: 20px;
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .nav-menu a {
+            color: #333;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+        }
+
+        .hero p {
+            font-size: 16px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+        }
+
+        .cta-section h2 {
+            font-size: 32px;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar Mengambang -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">RaraVisa</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#layanan">Layanan</a></li>
+            <li><a href="#proses">Proses</a></li>
+            <li><a href="#testimoni">Testimoni</a></li>
+            <li><a href="#kontak" class="cta-button">Konsultasi Gratis</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Urus Visa Jadi Mudah & Cepat!</h1>
+            <p>Agency visa terpercaya di Indonesia. Kami bantu proses visa Anda dari A-Z dengan layanan profesional dan
+                terpercaya.</p>
+            <div class="hero-buttons">
+                <a href="#layanan" class="btn-primary">Cek Layanan Visa</a>
+                <a href="#kontak" class="btn-secondary">Hubungi Kami</a>
+            </div>
+        </div>
+    </section>
+    <section class="services" id="layanan">
+        <div class="section-title">
+            <h2>Destinasi Tujuan</h2>
+            <p>Pilih negara tujuan Anda untuk kami bantu proses visanya</p>
+        </div>
+        <div class="services-grid">
+
+            <div class="service-card" style="background-image: url('assets/monument/us.jpg');">
+                <img src="assets/flag/us.png" alt="Bendera USA" class="destination-flag">
+                <div class="destination-content">
+                    <h3>United States of America / USA / Amerika</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+            <div class="service-card" style="background-image: url('assets/monument/french.jpeg');">
+                <img src="assets/flag/french.png" alt="Bendera Perancis" class="destination-flag">
+                <div class="destination-content">
+                    <h3>France / Perancis</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+            <div class="service-card" style="background-image: url('assets/monument/belanda.jpeg');">
+                <img src="assets/flag/belanda.png" alt="Bendera Belanda" class="destination-flag">
+                <div class="destination-content">
+                    <h3>Netherlands / Belanda</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+            <div class="service-card" style="background-image: url('assets/monument/korea.jpg');">
+                <img src="assets/flag/korea.png" alt="Bendera Korea Selatan" class="destination-flag">
+                <div class="destination-content">
+                    <h3>South Korea / Korea Selatan</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+            <div class="service-card" style="background-image: url('assets/monument/aus.jpg');">
+                <img src="assets/flag/aus.png" alt="Bendera Australia" class="destination-flag">
+                <div class="destination-content">
+                    <h3>Australia</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+            <div class="service-card" style="background-image: url('assets/monument/british.jpg');">
+                <img src="assets/flag/british.jpg" alt="Bendera Inggris" class="destination-flag">
+                <div class="destination-content">
+                    <h3>England / Great Britain / Inggris</h3>
+                    <a href="#" class="destination-button">Cek Visa</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="section-title">
+            <h2>Mengapa Pilih HeyVisa?</h2>
+            <p>Keunggulan layanan kami untuk kemudahan Anda</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">⚡</div>
+                <h3>Proses Cepat</h3>
+                <p>Pengurusan visa dengan proses yang efisien dan tepat waktu</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🛡️</div>
+                <h3>Terpercaya</h3>
+                <p>Berpengalaman bertahun-tahun dengan ribuan visa yang telah diproses</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">💰</div>
+                <h3>Harga Transparan</h3>
+                <p>Tidak ada biaya tersembunyi, semua biaya dijelaskan dengan detail</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🎯</div>
+                <h3>Success Rate Tinggi</h3>
+                <p>Tingkat keberhasilan visa approval mencapai 98%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process" id="proses">
+        <div class="section-title">
+            <h2>Cara Kerja Kami</h2>
+            <p>Proses mudah dalam 4 langkah sederhana</p>
+        </div>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Konsultasi</h3>
+                <p>Hubungi kami untuk konsultasi gratis mengenai kebutuhan visa Anda</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Persiapan Dokumen</h3>
+                <p>Kami bantu persiapan dan verifikasi kelengkapan dokumen Anda</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Proses Pengajuan</h3>
+                <p>Tim kami yang mengurus semua proses pengajuan visa ke kedutaan</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Visa Approved</h3>
+                <p>Visa Anda disetujui dan siap untuk perjalanan Anda</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimoni">
+        <div class="section-title">
+            <h2>Apa Kata Mereka?</h2>
+            <p>Testimoni dari klien yang puas dengan layanan kami</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"Pelayanan sangat memuaskan! Proses cepat dan tim sangat responsif. Visa
+                    turis Jepang saya disetujui dalam waktu 5 hari kerja."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AS</div>
+                    <div class="author-info">
+                        <h4>Andi Susanto</h4>
+                        <p>Visa Turis Jepang</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"Recommended banget! Tim HeyVisa membantu saya dari awal sampai visa
+                    approved. Sangat profesional dan terpercaya."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">RP</div>
+                    <div class="author-info">
+                        <h4>Rina Puspita</h4>
+                        <p>Visa Bisnis Singapura</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"Terima kasih HeyVisa! Visa pelajar ke Australia saya disetujui. Tim sangat
+                    membantu dalam persiapan dokumen."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">BW</div>
+                    <div class="author-info">
+                        <h4>Budi Wibowo</h4>
+                        <p>Visa Pelajar Australia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="kontak">
+        <h2>Siap Urus Visa Anda?</h2>
+        <p>Hubungi kami sekarang untuk konsultasi gratis dan dapatkan visa impian Anda!</p>
+        <div class="hero-buttons">
+            <a href="https://wa.me/62" class="btn-primary">WhatsApp Kami</a>
+            <a href="mailto:info@heyvisa.id" class="btn-secondary">Email Kami</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section footer-about">
+                <h2 class="footer-logo">HeyVisa</h2>
+                <p class="footer-tagline">Kamu eksplore dunia, kami yang urus visa</p>
+                <p class="footer-details">
+                    PT Visa Trans Benua (Heyvisa) adalah perusahaan penyedia jasa dokumen perjalanan (Kode KBLI 79111)
+                    yang terdaftar secara resmi di Indonesia dengan Nomor Induk Berusaha (NIB) 1205240096036.
+                </p>
+                <p class="footer-details">
+                    HeyVisa berlokasi di Menara Caraka Lantai 9, Unit 936, Jl. Mega Kuningan Barat, Kuningan Timur,
+                    Setiabudi, Jakarta Selatan, DKI Jakarta 12950
+                </p>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Layanan</h3>
+                <a href="#">Katalog</a>
+                <a href="#">Asuransi perjalanan</a>
+                <a href="#">Legalisir dokumen</a>
+                <a href="#">Untuk perusahaan (B2B)</a>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Perusahaan</h3>
+                <a href="#">Tentang kami</a>
+                <a href="#">Ketentuan Layanan</a>
+            </div>
+
+            <div class="footer-section footer-contact">
+                <h3>Kontak</h3>
+                <p>PT Visa Trans Benua</p>
+                <p>E-mail: hello@heyvisa.id</p>
+                <p>Whatsapp: +6281188090025</p>
+                <p>Instagram: heyvisa.id</p>
+                <p>Tiktok: heyvisa.id</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <hr class="footer-hr">
+            <div class="social-links">
+                <a href="#" class="social-link" title="Instagram">
+                    <img src="assets/logo-sosmed/ig.svg" alt="Instagram">
+                </a>
+                <a href="#" class="social-link" title="WhatsApp">
+                    <img src="assets/logo-sosmed/wa.svg" alt="WhatsApp">
+                </a>
+                <a href="#" class="social-link" title="Facebook">
+                    <img src="assets/logo-sosmed/facebook.svg" alt="Facebook">
+                </a>
+                <a href="#" class="social-link" title="Email">
+                    <img src="assets/logo-sosmed/tiktok.svg" alt="Email">
+                </a>
+                <a href="#" class="social-link" title="TikTok">
+                    <img src="assets/logo-sosmed/email.svg" alt="TikTok">
+                </a>
+            </div>
+            <p class="copyright">
+                © 2025 - Heyvisa Indonesia — PT Visa Trans Benua. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+
+    hamburger.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', function() {
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Animasi "Cara Kerja Kami" saat di-scroll
+    const steps = document.querySelectorAll('.process .step');
+
+    const observerOptions = {
+        root: null, // Menggunakan viewport sebagai acuan
+        threshold: 0.1 // Muncul saat 10% bagian terlihat
+    };
+
+    const stepObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            // Saat elemen masuk ke layar
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible'); // Tambahkan class .visible
+                observer.unobserve(entry.target); // Hentikan pengamatan (animasi sekali saja)
+            }
+        });
+    }, observerOptions);
+
+    // Amati setiap elemen .step
+    steps.forEach(step => {
+        stepObserver.observe(step);
+    });
+    </script>
+</body>
+
+</html>

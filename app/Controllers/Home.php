@@ -6,7 +6,7 @@ class Home extends BaseController
 {
     public function index()
     {
-        helper('url'); 
-        return view('landing/home');
+        helper('url');
+        return view('landing/landing');
     }
 }
