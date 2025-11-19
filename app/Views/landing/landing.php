@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heyvisa - Agency Visa Terpercaya Indonesia</title>
+    <title>Bali Fantastic - Agency Visa Terpercaya Indonesia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -595,14 +595,35 @@
         }
 
         /* Footer Baru (Minimalis) */
+        /* Footer Baru (Minimalis) */
         .footer {
-            background: #fff;
-            /* Latar belakang putih */
+            /* Hapus background: #fff; */
             color: #555;
-            /* Warna teks abu-abu gelap */
             padding: 80px 5% 40px;
             border-top: 1px solid #eee;
-            /* Garis tipis di atas footer */
+            position: relative;
+            /* Penting untuk penempatan overlay */
+            overflow: hidden;
+            /* Pastikan gambar tidak keluar dari footer */
+            z-index: 1;
+        }
+
+        /* Tambahkan Overlay Gambar di Footer */
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Ganti URL jika gambar berbeda */
+            background-image: url('assets/logo-sosmed/footer.webp');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            /* Transparansi: 0.1 = 10% (sesuaikan sesuai keinginan) */
+            z-index: -1;
+            /* Pindahkan gambar ke belakang konten */
         }
 
         .footer-content {
@@ -795,13 +816,155 @@
                 font-size: 32px;
             }
         }
+
+        /* --- CSS BARU UNTUK KATALOG LAYANAN (Feature List Style) --- */
+
+        .services-catalog {
+            padding: 100px 5%;
+            background: #f0f4f8;
+            /* Latar belakang abu-abu muda */
+        }
+
+        .catalog-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.08);
+            overflow: hidden;
+        }
+
+        /* Kolom Kiri: Daftar Layanan */
+        .catalog-menu {
+            flex: 1;
+            padding: 30px 0;
+            border-right: 1px solid #eee;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 30px;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Efek Hover & Aktif */
+        .menu-item:hover {
+            background: #f8fafc;
+        }
+
+        .menu-item.active {
+            /* Class ini akan ditambahkan oleh JS */
+            background: #e0eaff;
+            border-left-color: #2563eb;
+        }
+
+        .menu-icon {
+            color: #2563eb;
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .menu-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Kolom Kanan: Detail Layanan */
+        .catalog-detail {
+            flex: 2;
+            padding: 50px;
+        }
+
+        .detail-content {
+            /* Hanya tampilkan yang aktif (disimulasikan di HTML) */
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .detail-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-content h3 {
+            font-size: 32px;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .detail-content p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .detail-features {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 30px;
+        }
+
+        .detail-features li {
+            background: #fff;
+            padding: 10px 0;
+            color: #2563eb;
+            font-weight: 500;
+            border-bottom: 1px dashed #eef2f7;
+        }
+
+        .detail-features li i {
+            margin-right: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .catalog-container {
+                flex-direction: column;
+                gap: 0;
+                border-radius: 10px;
+            }
+
+            .catalog-menu {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 10px 0;
+            }
+
+            .menu-item {
+                padding: 15px 20px;
+            }
+
+            .catalog-detail {
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Navbar Mengambang -->
     <nav class="navbar" id="navbar">
-        <div class="logo">RaraVisa</div>
+        <div class="logo">Bali Fantastic</div>
         <ul class="nav-menu" id="navMenu">
             <li><a href="#home">Home</a></li>
             <li><a href="#layanan">Layanan</a></li>
@@ -828,58 +991,157 @@
             </div>
         </div>
     </section>
+
+
+    <section class="services-catalog" id="layanan">
+        <div class="section-title">
+            <h2>Katalog Layanan Visa & Dokumen</h2>
+            <p>Pilih layanan yang Anda butuhkan untuk melihat persyaratan dan detail lengkap</p>
+        </div>
+
+        <div class="catalog-container">
+            <div class="catalog-menu">
+                <div class="menu-item active" data-target="detail-voa">
+                    <div class="menu-icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                    <h4>Visa On Arrival (VOA)</h4>
+                </div>
+                <div class="menu-item" data-target="detail-kitasinves">
+                    <div class="menu-icon"><i class="fa-solid fa-building"></i></div>
+                    <h4>KITAS Investor</h4>
+                </div>
+                <div class="menu-item" data-target="detail-visaext">
+                    <div class="menu-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <h4>Visa Extention</h4>
+                </div>
+                <div class="menu-item" data-target="detail-kitasext">
+                    <div class="menu-icon"><i class="fa-solid fa-file-contract"></i></div>
+                    <h4>KITAS Extention</h4>
+                </div>
+                <div class="menu-item" data-target="detail-b211">
+                    <div class="menu-icon"><i class="fa-solid fa-passport"></i></div>
+                    <h4>Visa B211 (Kunjungan)</h4>
+                </div>
+            </div>
+
+            <div class="catalog-detail">
+
+                <div class="detail-content active" id="detail-voa">
+                    <h3>Visa On Arrival (VOA)</h3>
+                    <p>Pengurusan Izin Tinggal Kunjungan saat kedatangan untuk tujuan wisata atau kunjungan singkat
+                        lainnya di Indonesia.</p>
+                    <ul class="detail-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Proses Cepat (Saat Kedatangan)</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Berlaku untuk 90+ Negara</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Dapat diperpanjang 1 kali</li>
+                    </ul>
+                    <a href="#kontak" class="btn-primary">Ajukan VOA Sekarang</a>
+                </div>
+
+                <div class="detail-content" id="detail-kitasinves">
+                    <h3>KITAS Investor</h3>
+                    <p>Izin Tinggal Terbatas khusus untuk penanam modal asing yang mendirikan perusahaan di Indonesia.
+                        Solusi untuk tinggal dan bekerja sebagai direktur/komisaris.</p>
+                    <ul class="detail-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Izin Tinggal 1-2 Tahun</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Berlaku untuk Izin Kerja</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Proses Lengkap dari RPTKA</li>
+                    </ul>
+                    <a href="#kontak" class="btn-primary">Ajukan KITAS Investor</a>
+                </div>
+
+                <div class="detail-content" id="detail-visaext">
+                    <h3>Visa Extention</h3>
+                    <p>Perpanjangan Visa Kunjungan (seperti VOA atau B211) Anda di Indonesia tanpa harus keluar negeri.
+                        Kami urus prosesnya di kantor imigrasi setempat.</p>
+                    <ul class="detail-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Perpanjangan Hingga 60 Hari</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Layanan Penjemputan Dokumen</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Tanpa Perlu Keluar Indonesia</li>
+                    </ul>
+                    <a href="#kontak" class="btn-primary">Perpanjang Visa Anda</a>
+                </div>
+
+                <div class="detail-content" id="detail-kitasext">
+                    <h3>KITAS Extention</h3>
+                    <p>Perpanjangan Izin Tinggal Terbatas (KITAS) Anda untuk memastikan status hukum Anda tetap berlaku
+                        di Indonesia. Kami urus semua dokumen perpanjangan.</p>
+                    <ul class="detail-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Perpanjangan KITAS Tahunan</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Monitoring Masa Berlaku</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Termasuk Izin Kerja (IMTA)</li>
+                    </ul>
+                    <a href="#kontak" class="btn-primary">Perpanjang KITAS Sekarang</a>
+                </div>
+
+                <div class="detail-content" id="detail-b211">
+                    <h3>Visa B211 (Kunjungan Wisata/Bisnis)</h3>
+                    <p>Visa elektronik (e-Visa) yang diterbitkan sebelum kedatangan, ideal untuk kunjungan wisata,
+                        bisnis, atau tujuan non-kerja lainnya yang lebih lama (hingga 6 bulan).</p>
+                    <ul class="detail-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Masa Tinggal Awal 60 Hari</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Dapat Diperpanjang 2 Kali</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Diproses Sepenuhnya Online</li>
+                    </ul>
+                    <a href="#kontak" class="btn-primary">Ajukan Visa B211</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
     <section class="services" id="layanan">
         <div class="section-title">
-            <h2>Destinasi Tujuan</h2>
-            <p>Pilih negara tujuan Anda untuk kami bantu proses visanya</p>
+            <h2>Destinasi Tujuan Visa Terbaik</h2>
+            <p>Pilih negara impian Anda, kami yang urus visanya</p>
         </div>
         <div class="services-grid">
 
-            <div class="service-card" style="background-image: url('assets/monument/us.jpg');">
-                <img src="assets/flag/us.png" alt="Bendera USA" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/bali.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>United States of America / USA / Amerika</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Wisata Bali / Pulau Dewata</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
-            <div class="service-card" style="background-image: url('assets/monument/french.jpeg');">
-                <img src="assets/flag/french.png" alt="Bendera Perancis" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/rajaampat.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>France / Perancis</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Wisata Raja Ampat / Papua</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
-            <div class="service-card" style="background-image: url('assets/monument/belanda.jpeg');">
-                <img src="assets/flag/belanda.png" alt="Bendera Belanda" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/komodo.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>Netherlands / Belanda</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Wisata Komodo / Nusa Tenggara Timur</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
-            <div class="service-card" style="background-image: url('assets/monument/korea.jpg');">
-                <img src="assets/flag/korea.png" alt="Bendera Korea Selatan" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/borobudur.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>South Korea / Korea Selatan</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Candi Borobudur / Jawa Tengah</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
-            <div class="service-card" style="background-image: url('assets/monument/aus.jpg');">
-                <img src="assets/flag/aus.png" alt="Bendera Australia" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/gili.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>Australia</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Wisata Gili Trawangan / Lombok</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
-            <div class="service-card" style="background-image: url('assets/monument/british.jpg');">
-                <img src="assets/flag/british.jpg" alt="Bendera Inggris" class="destination-flag">
+            <div class="service-card" style="background-image: url('assets/monument/toba.jpg');">
+                <img src="assets/flag/indonesia.png" alt="Bendera Indonesia" class="destination-flag">
                 <div class="destination-content">
-                    <h3>England / Great Britain / Inggris</h3>
-                    <a href="#" class="destination-button">Cek Visa</a>
+                    <h3>Wisata Danau Toba / Sumatera Utara</h3>
+                    <a href="#kontak" class="destination-button">Konsultasi Visa Wisata</a>
                 </div>
             </div>
 
@@ -892,7 +1154,7 @@
 
             <div class="benefits-left-column">
                 <div class="section-title" style="text-align: left; margin-bottom: 40px;">
-                    <h2>Mengapa Pilih HeyVisa?</h2>
+                    <h2>Mengapa Pilih Bali Fantastic?</h2>
                     <p>Keunggulan layanan kami untuk kemudahan Anda</p>
                 </div>
 
@@ -940,7 +1202,7 @@
             </div>
 
             <div class="benefits-right-column">
-                <img src="assets/right.png" alt="Layanan Profesional HeyVisa">
+                <img src="assets/right.png" alt="Layanan Profesional Bali Fantastic">
             </div>
 
         </div>
@@ -1010,7 +1272,7 @@
             </div>
             <div class="testimonial-card">
                 <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Recommended banget! Tim HeyVisa membantu saya dari awal sampai visa
+                <p class="testimonial-text">"Recommended banget! Tim Bali Fantastic membantu saya dari awal sampai visa
                     approved. Sangat profesional dan terpercaya."</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">RP</div>
@@ -1022,7 +1284,8 @@
             </div>
             <div class="testimonial-card">
                 <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Terima kasih HeyVisa! Visa pelajar ke Australia saya disetujui. Tim sangat
+                <p class="testimonial-text">"Terima kasih Bali Fantastic! Visa pelajar ke Australia saya disetujui. Tim
+                    sangat
                     membantu dalam persiapan dokumen."</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">BW</div>
@@ -1041,7 +1304,7 @@
         <p>Hubungi kami sekarang untuk konsultasi gratis dan dapatkan visa impian Anda!</p>
         <div class="hero-buttons">
             <a href="https://wa.me/62" class="btn-primary">WhatsApp Kami</a>
-            <a href="mailto:info@heyvisa.id" class="btn-secondary">Email Kami</a>
+            <a href="mailto:info@Bali Fantastic.id" class="btn-secondary">Email Kami</a>
         </div>
     </section>
 
@@ -1049,14 +1312,16 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section footer-about">
-                <h2 class="footer-logo">HeyVisa</h2>
+                <h2 class="footer-logo">Bali Fantastic</h2>
                 <p class="footer-tagline">Kamu eksplore dunia, kami yang urus visa</p>
                 <p class="footer-details">
-                    PT Visa Trans Benua (Heyvisa) adalah perusahaan penyedia jasa dokumen perjalanan (Kode KBLI 79111)
-                    yang terdaftar secara resmi di Indonesia dengan Nomor Induk Berusaha (NIB) 1205240096036.
+                    PT Visa Jaya Abadi (Bali Fantastic) adalah perusahaan penyedia jasa dokumen perjalanan (Kode KBLI
+                    73864)
+                    yang terdaftar secara resmi di Indonesia dengan Nomor Induk Berusaha (NIB) 12038737478.
                 </p>
                 <p class="footer-details">
-                    HeyVisa berlokasi di Menara Caraka Lantai 9, Unit 936, Jl. Mega Kuningan Barat, Kuningan Timur,
+                    Bali Fantastic berlokasi di Menara Caraka Lantai 9, Unit 936, Jl. Mega Kuningan Barat, Kuningan
+                    Timur,
                     Setiabudi, Jakarta Selatan, DKI Jakarta 12950
                 </p>
             </div>
@@ -1078,10 +1343,10 @@
             <div class="footer-section footer-contact">
                 <h3>Kontak</h3>
                 <p>PT Visa Trans Benua</p>
-                <p>E-mail: hello@heyvisa.id</p>
+                <p>E-mail: hello@balifantastic.id</p>
                 <p>Whatsapp: +6281188090025</p>
-                <p>Instagram: heyvisa.id</p>
-                <p>Tiktok: heyvisa.id</p>
+                <p>Instagram: balifantastic.id</p>
+                <p>Tiktok: balifantastic.id</p>
             </div>
         </div>
 
@@ -1105,12 +1370,37 @@
                 </a>
             </div>
             <p class="copyright">
-                © 2025 - Heyvisa Indonesia — PT Visa Trans Benua. All Rights Reserved.
+                © 2025 - Bali Fantastic Indonesia — PT Visa Trans Benua. All Rights Reserved.
             </p>
         </div>
     </footer>
 
     <script>
+        // JS untuk Katalog Layanan Interaktif
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const detailContents = document.querySelectorAll('.detail-content');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 1. Hapus kelas 'active' dari semua menu
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    // 2. Tambahkan kelas 'active' ke menu yang diklik
+                    this.classList.add('active');
+
+                    const targetId = this.getAttribute('data-target');
+
+                    // 3. Sembunyikan semua detail konten
+                    detailContents.forEach(content => content.classList.remove('active'));
+
+                    // 4. Tampilkan detail konten yang sesuai
+                    const targetDetail = document.getElementById(targetId);
+                    if (targetDetail) {
+                        targetDetail.classList.add('active');
+                    }
+                });
+            });
+        });
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
@@ -1171,6 +1461,7 @@
         // Amati setiap elemen .step
         steps.forEach(step => {
             stepObserver.observe(step);
+
         });
     </script>
 </body>
