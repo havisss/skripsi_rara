@@ -10,6 +10,23 @@ use CodeIgniter\Router\RouteCollection;
 // Jika ingin halaman awal langsung ke Dashboard, gunakan yang ini:
 $routes->get('/', 'Home::index');
 
+
+
+// Route untuk menampilkan halaman formulir
+$routes->get('/booking', 'Booking::index');
+// Route untuk memproses data form (Nantinya)
+$routes->post('/booking/submit', 'Booking::submit');
+
+
+
+
+
+
+
+
+
+
+
 // --- TAMBAHKAN KODE DI BAWAH INI ---
 
 // Route utama Dashboard
