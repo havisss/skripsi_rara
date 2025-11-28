@@ -617,8 +617,8 @@
             width: 100%;
             height: 100%;
             /* Ganti URL jika gambar berbeda */
-            background-image: url('assets/logo-sosmed/footer.webp');
-            background-size: cover;
+            background-image: url('assets/bgfooter.PNG');
+            background-size: 80px;
             background-position: center;
             opacity: 0.1;
             /* Transparansi: 0.1 = 10% (sesuaikan sesuai keinginan) */
@@ -1024,7 +1024,6 @@
             </div>
 
             <div class="catalog-detail">
-
                 <div class="detail-content active" id="detail-voa">
                     <h3>Visa On Arrival (VOA)</h3>
                     <p>Pengurusan Izin Tinggal Kunjungan saat kedatangan untuk tujuan wisata atau kunjungan singkat
@@ -1034,7 +1033,7 @@
                         <li><i class="fa-solid fa-check-circle"></i> Berlaku untuk 90+ Negara</li>
                         <li><i class="fa-solid fa-check-circle"></i> Dapat diperpanjang 1 kali</li>
                     </ul>
-                    <a href="#kontak" class="btn-primary">Ajukan VOA Sekarang</a>
+                    <a href="<?= base_url('booking?service=voa'); ?>" class="btn-primary">Ajukan VOA Sekarang</a>
                 </div>
 
                 <div class="detail-content" id="detail-kitasinves">
@@ -1046,7 +1045,7 @@
                         <li><i class="fa-solid fa-check-circle"></i> Berlaku untuk Izin Kerja</li>
                         <li><i class="fa-solid fa-check-circle"></i> Proses Lengkap dari RPTKA</li>
                     </ul>
-                    <a href="#kontak" class="btn-primary">Ajukan KITAS Investor</a>
+                    <a href="<?= base_url('booking?service=visa_ext'); ?>" class="btn-primary">Perpanjang Visa Anda</a>
                 </div>
 
                 <div class="detail-content" id="detail-visaext">
@@ -1058,7 +1057,7 @@
                         <li><i class="fa-solid fa-check-circle"></i> Layanan Penjemputan Dokumen</li>
                         <li><i class="fa-solid fa-check-circle"></i> Tanpa Perlu Keluar Indonesia</li>
                     </ul>
-                    <a href="#kontak" class="btn-primary">Perpanjang Visa Anda</a>
+                    <a href="<?= base_url('booking?service=visa_ext'); ?>" class="btn-primary">Perpanjang Visa Anda</a>
                 </div>
 
                 <div class="detail-content" id="detail-kitasext">
@@ -1070,7 +1069,8 @@
                         <li><i class="fa-solid fa-check-circle"></i> Monitoring Masa Berlaku</li>
                         <li><i class="fa-solid fa-check-circle"></i> Termasuk Izin Kerja (IMTA)</li>
                     </ul>
-                    <a href="#kontak" class="btn-primary">Perpanjang KITAS Sekarang</a>
+                    <a href="<?= base_url('booking?service=kitas_ext'); ?>" class="btn-primary">Perpanjang KITAS
+                        Sekarang</a>
                 </div>
 
                 <div class="detail-content" id="detail-b211">
@@ -1082,7 +1082,7 @@
                         <li><i class="fa-solid fa-check-circle"></i> Dapat Diperpanjang 2 Kali</li>
                         <li><i class="fa-solid fa-check-circle"></i> Diproses Sepenuhnya Online</li>
                     </ul>
-                    <a href="#kontak" class="btn-primary">Ajukan Visa B211</a>
+                    <a href="<?= base_url('booking?service=b211'); ?>" class="btn-primary">Ajukan Visa B211</a>
                 </div>
 
             </div>

@@ -8,7 +8,25 @@ use CodeIgniter\Router\RouteCollection;
 
 // Hapus salah satu baris route '/' agar tidak bentrok. 
 // Jika ingin halaman awal langsung ke Dashboard, gunakan yang ini:
-$routes->get('/', 'Dashboard::index');
+$routes->get('/', 'Home::index');
+
+
+// Route untuk menampilkan halaman formulir
+$routes->get('/booking', 'Booking::index');
+// Route untuk memproses data form (Nantinya)
+$routes->post('/booking/submit', 'Booking::submit');
+
+
+
+
+
+
+
+
+
+
+
+
 
 // --- TAMBAHKAN KODE DI BAWAH INI ---
 
