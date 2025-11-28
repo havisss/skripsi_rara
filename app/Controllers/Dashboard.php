@@ -42,7 +42,7 @@ class Dashboard extends BaseController
             ]
         ];
         
-        return view('dashboard/landingadmin', $data);
+        return view('dashboard/dashboardadmin', $data);
     }
     
     public function profile()
