@@ -13,14 +13,20 @@ $routes->get('/', 'Home::index');
 
 
 // Route untuk menampilkan halaman formulir
-$routes->get('/booking', 'Booking::index');
-// Route untuk memproses data form (Nantinya)
-$routes->post('/booking/submit', 'Booking::submit');
 
-$routes->get('/booking/success/(:segment)', 'Booking::success/$1');
+$routes->get('/login', 'Auth::index');           // Menampilkan halaman login
+$routes->post('/login/auth', 'Auth::loginProcess'); // Proses validasi login
+$routes->get('/register', 'Auth::register');            // Halaman form daftar
+$routes->post('/register/process', 'Auth::registerProcess');
+// Update route logout agar mengarah ke Controller Auth
+$routes->get('/logout', 'Auth::logout');
 
-
-
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/booking', 'Booking::index');
+    // Route untuk memproses data form (Nantinya)
+    $routes->post('/booking/submit', 'Booking::submit');
+    $routes->get('/booking/success/(:segment)', 'Booking::success/$1');
+});
 
 
 
