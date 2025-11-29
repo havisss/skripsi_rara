@@ -21,7 +21,20 @@ $routes->get('/booking/success/(:segment)', 'Booking::success/$1');
 
 
 
-
+$routes->group('admin', function($routes) {
+    
+    // 1. Tampilkan Halaman Login (GET)
+    // Mengarah ke Controller LoginAdmin, fungsi index
+    $routes->get('login', 'LoginAdmin::index');
+    
+    // 2. Proses Cek Password (POST)
+    // Mengarah ke Controller LoginAdmin, fungsi auth
+    $routes->post('auth', 'LoginAdmin::auth');
+    
+    // 3. Logout
+    $routes->get('logout', 'LoginAdmin::logout');
+    
+});
 
 
 
