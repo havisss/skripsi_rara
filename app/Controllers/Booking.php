@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\VisaTypeModel;
 use App\Models\VisaRequirementModel;
-use App\Models\UserModel;
+use App\Models\UserModel; // Load User Model
 use App\Models\ApplicationModel;
 use App\Models\ApplicationDocumentModel;
 
@@ -14,6 +14,7 @@ class Booking extends BaseController
     {
         $visaModel = new VisaTypeModel();
         $reqModel = new VisaRequirementModel();
+        $userModel = new UserModel(); // Tambahkan ini
 
         // 1. Ambil pilihan dari URL (misal: ?service=voa)
         $selectedCode = $this->request->getGet('service') ?? 'voa';
@@ -32,10 +33,16 @@ class Booking extends BaseController
         // 4. Ambil syarat dokumen KHUSUS untuk visa yang dipilih
         $requirements = $reqModel->where('visa_type_id', $selectedVisa['id'])->findAll();
 
+        // --- TAMBAHAN BARU ---
+        // 5. Ambil Data User yang sedang Login untuk Auto-fill form
+        $userId = session()->get('id');
+        $userData = $userModel->find($userId);
+
         $data = [
             'selected_visa' => $selectedVisa,
             'all_visas'     => $allVisas,
-            'requirements'  => $requirements
+            'requirements'  => $requirements,
+            'user'          => $userData // Kirim data user ke view
         ];
 
         return view('booking_view', $data);
@@ -43,38 +50,26 @@ class Booking extends BaseController
 
     public function submit()
     {
-        $userModel = new UserModel();
+        // Pastikan user login (walaupun sudah di filter route, ini double check)
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
         $appModel = new ApplicationModel();
         $docModel = new ApplicationDocumentModel();
 
-        // 1. DATA USER
-        $email = $this->request->getPost('email');
-        $fullname = $this->request->getPost('fullname');
-        $phone = $this->request->getPost('phone');
+        // --- PERUBAHAN UTAMA DI SINI ---
 
-        // Cek apakah user sudah terdaftar berdasarkan email?
-        $user = $userModel->where('email', $email)->first();
-
-        if (!$user) {
-            // Jika user baru, simpan ke database
-            $userData = [
-                'full_name' => $fullname,
-                'email' => $email,
-                'phone_number' => $phone,
-                'password_hash' => password_hash('123456', PASSWORD_DEFAULT), // Default password sementara
-            ];
-            $userId = $userModel->insert($userData);
-        } else {
-            // Jika user lama, ambil ID-nya
-            $userId = $user['id'];
-        }
+        // 1. AMBIL ID USER DARI SESSION (BUKAN DARI INPUT FORM)
+        $userId = session()->get('id');
 
         // 2. BUAT DATA APLIKASI (BOOKING)
         $visaTypeId = $this->request->getPost('visa_type_id') ?? 1;
         $invoiceNumber = 'INV-' . strtoupper(uniqid());
+
         $appData = [
             'invoice_number' => $invoiceNumber,
-            'user_id' => $userId,
+            'user_id' => $userId, // Langsung pakai ID dari session
             'visa_type_id' => $visaTypeId,
             'status' => 'payment_pending',
             'payment_status' => 'unpaid',
@@ -87,16 +82,16 @@ class Booking extends BaseController
         $files = $this->request->getFiles();
 
         foreach ($files as $key => $file) {
-            // Kita hanya memproses input yang namanya diawali "doc_" (hasil looping di view tadi)
+            // Kita hanya memproses input yang namanya diawali "doc_"
             if (strpos($key, 'doc_') === 0) {
                 if ($file->isValid() && !$file->hasMoved()) {
-                    // Ambil ID Requirement dari nama input (contoh: doc_3 => ambil angka 3)
+                    // Ambil ID Requirement dari nama input
                     $requirementId = str_replace('doc_', '', $key);
 
-                    // Generate nama file random agar tidak bentrok
+                    // Generate nama file random
                     $newName = $file->getRandomName();
 
-                    // Pindahkan file ke folder public/uploads/documents
+                    // Pindahkan file
                     $file->move(ROOTPATH . 'public/uploads/documents', $newName);
 
                     // Simpan path file ke database

@@ -19,26 +19,28 @@
 
             <div class="form-group">
                 <label>Nama Lengkap (Sesuai Paspor)</label>
-                <input type="text" name="fullname" required placeholder="Contoh: Budi Santoso">
+                <input type="text" name="fullname" value="<?= $user['full_name'] ?? '' ?>" readonly
+                    style="background-color: #e9ecef;">
             </div>
             <div class="form-group">
                 <label>Email Aktif</label>
-                <input type="email" name="email" required placeholder="email@contoh.com">
+                <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" readonly
+                    style="background-color: #e9ecef;">
             </div>
             <div class="form-group">
                 <label>Nomor WhatsApp</label>
-                <input type="text" name="phone" required placeholder="+6281...">
+                <input type="text" name="phone" value="<?= $user['phone_number'] ?? '' ?>" readonly
+                    style="background-color: #e9ecef;">
             </div>
-
             <div class="form-group">
                 <label>Jenis Layanan Visa</label>
                 <select name="service_type"
                     onchange="window.location.href='<?= base_url('booking?service=') ?>'+this.value">
                     <?php foreach ($all_visas as $visa) : ?>
-                        <option value="<?= $visa['code']; ?>"
-                            <?= ($visa['id'] == $selected_visa['id']) ? 'selected' : ''; ?>>
-                            <?= $visa['name']; ?> - Rp <?= number_format($visa['price'], 0, ',', '.'); ?>
-                        </option>
+                    <option value="<?= $visa['code']; ?>"
+                        <?= ($visa['id'] == $selected_visa['id']) ? 'selected' : ''; ?>>
+                        <?= $visa['name']; ?> - Rp <?= number_format($visa['price'], 0, ',', '.'); ?>
+                    </option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -56,18 +58,18 @@
                 <p class="hint"><?= $selected_visa['description']; ?></p>
 
                 <?php foreach ($requirements as $req) : ?>
-                    <div class="form-group">
-                        <label>
-                            <?= $req['document_name']; ?>
-                            <?= ($req['is_mandatory']) ? '<span style="color:red">*</span>' : '(Opsional)'; ?>
-                        </label>
-                        <div class="file-input-wrapper">
-                            <input type="file" name="doc_<?= $req['id']; ?>"
-                                accept=".<?= str_replace(',', ',.', $req['file_type']); ?>"
-                                <?= ($req['is_mandatory']) ? 'required' : ''; ?>>
-                            <span class="hint">Format: <?= strtoupper($req['file_type']); ?></span>
-                        </div>
+                <div class="form-group">
+                    <label>
+                        <?= $req['document_name']; ?>
+                        <?= ($req['is_mandatory']) ? '<span style="color:red">*</span>' : '(Opsional)'; ?>
+                    </label>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="doc_<?= $req['id']; ?>"
+                            accept=".<?= str_replace(',', ',.', $req['file_type']); ?>"
+                            <?= ($req['is_mandatory']) ? 'required' : ''; ?>>
+                        <span class="hint">Format: <?= strtoupper($req['file_type']); ?></span>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
 
@@ -198,32 +200,32 @@
     </footer>
 
     <script>
-        function updateForm() {
-            // 1. Ambil value dropdown
-            const type = document.getElementById('serviceType').value;
-            const passportHint = document.getElementById('passportHint');
+    function updateForm() {
+        // 1. Ambil value dropdown
+        const type = document.getElementById('serviceType').value;
+        const passportHint = document.getElementById('passportHint');
 
-            // 2. Sembunyikan semua section dinamis dulu
-            document.querySelectorAll('.dynamic-section').forEach(el => el.classList.remove('active'));
+        // 2. Sembunyikan semua section dinamis dulu
+        document.querySelectorAll('.dynamic-section').forEach(el => el.classList.remove('active'));
 
-            // 3. Logika Tampilan Berdasarkan Pilihan
-            if (type === 'voa') {
-                document.getElementById('sec-voa').classList.add('active');
-                passportHint.innerText = "Format: JPG/PDF. Masa berlaku paspor min 6 bulan.";
-            } else if (type === 'b211') {
-                document.getElementById('sec-b211').classList.add('active');
-                passportHint.innerText = "Format: JPG/PDF. Masa berlaku min 6 bulan (60 hari) atau 12 bulan (180 hari).";
-            } else if (type === 'kitas_investor') {
-                document.getElementById('sec-kitas-investor').classList.add('active');
-                passportHint.innerText = "Format: JPG/PDF. PENTING: Masa berlaku paspor min 18 bulan.";
-            } else if (type === 'visa_ext' || type === 'kitas_ext') {
-                document.getElementById('sec-extension').classList.add('active');
-                passportHint.innerText = "Format: JPG/PDF. Scan paspor asli halaman depan.";
-            }
+        // 3. Logika Tampilan Berdasarkan Pilihan
+        if (type === 'voa') {
+            document.getElementById('sec-voa').classList.add('active');
+            passportHint.innerText = "Format: JPG/PDF. Masa berlaku paspor min 6 bulan.";
+        } else if (type === 'b211') {
+            document.getElementById('sec-b211').classList.add('active');
+            passportHint.innerText = "Format: JPG/PDF. Masa berlaku min 6 bulan (60 hari) atau 12 bulan (180 hari).";
+        } else if (type === 'kitas_investor') {
+            document.getElementById('sec-kitas-investor').classList.add('active');
+            passportHint.innerText = "Format: JPG/PDF. PENTING: Masa berlaku paspor min 18 bulan.";
+        } else if (type === 'visa_ext' || type === 'kitas_ext') {
+            document.getElementById('sec-extension').classList.add('active');
+            passportHint.innerText = "Format: JPG/PDF. Scan paspor asli halaman depan.";
         }
+    }
 
-        // Jalankan fungsi saat halaman dimuat agar sesuai pilihan awal
-        document.addEventListener('DOMContentLoaded', updateForm);
+    // Jalankan fungsi saat halaman dimuat agar sesuai pilihan awal
+    document.addEventListener('DOMContentLoaded', updateForm);
     </script>
 
 </body>
