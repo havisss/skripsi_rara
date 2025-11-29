@@ -27,9 +27,9 @@
                     <i class="fas fa-users" style="color: #0d6efd;"></i>
                 </div>
                 <div class="crm-stat-details">
-                    <h3>247</h3>
+                    <h3><?= $stats['total'] ?></h3>
                     <p>Total Klien</p>
-                    <small class="text-success"><i class="fas fa-arrow-up"></i> +12% bulan ini</small>
+                    <small class="text-success">Terdaftar di sistem</small>
                 </div>
             </div>
 
@@ -38,9 +38,9 @@
                     <i class="fas fa-user-check" style="color: #28a745;"></i>
                 </div>
                 <div class="crm-stat-details">
-                    <h3>189</h3>
+                    <h3><?= $stats['active'] ?></h3>
                     <p>Klien Aktif</p>
-                    <small class="text-muted">Memiliki visa aktif</small>
+                    <small class="text-muted">Memiliki visa valid</small>
                 </div>
             </div>
 
@@ -49,9 +49,9 @@
                     <i class="fas fa-sync-alt" style="color: #ff9800;"></i>
                 </div>
                 <div class="crm-stat-details">
-                    <h3>34</h3>
+                    <h3><?= $stats['returning'] ?></h3>
                     <p>Returning Customer</p>
-                    <small class="text-muted">Lebih dari 1 aplikasi</small>
+                    <small class="text-muted">> 1x Order</small>
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
                     <i class="fas fa-clock" style="color: #dc3545;"></i>
                 </div>
                 <div class="crm-stat-details">
-                    <h3>23</h3>
+                    <h3><?= $stats['expiring'] ?></h3>
                     <p>Visa Expiring Soon</p>
                     <small class="text-danger"><i class="fas fa-exclamation-circle"></i> Dalam 30 hari</small>
                 </div>
@@ -108,375 +108,142 @@
 
         <!-- CLIENT CARDS -->
         <div class="client-grid">
-            <!-- CLIENT 1 - VIP -->
-            <div class="client-card vip-client">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=John+Smith&background=0d6efd&color=fff" alt="Client">
-                        <span class="client-status online"></span>
-                    </div>
-                    <div class="client-badge vip-badge">
-                        <i class="fas fa-crown"></i> VIP
-                    </div>
-                </div>
+            <?php if (empty($clients)): ?>
+                <p style="text-align:center; grid-column: 1/-1; padding: 40px; color:#999;">Belum ada data klien.</p>
+            <?php else: ?>
+                <?php foreach ($clients as $client): ?>
 
-                <div class="client-card-body">
-                    <h3 class="client-name">John Smith</h3>
-                    <p class="client-email">john.smith@email.com</p>
+                    <?php
+                    // --- LOGIKA STATUS VISUAL ---
+                    $cardClass = ''; // Default putih
+                    $badgeClass = 'new-badge';
+                    $badgeIcon = 'fa-star';
+                    $badgeText = 'New';
+                    $statusDot = 'offline'; // Titik abu-abu
 
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>Australia</span>
+                    // Siapkan tanggal untuk perhitungan
+                    $expiryDate = $client['last_expiry'] ? new DateTime($client['last_expiry']) : null;
+                    $today = new DateTime();
+
+                    // 1. Cek User AKTIF (Visa Approved & Belum Expired)
+                    if ($client['last_status'] == 'approved' && $expiryDate > $today) {
+                        $diff = $today->diff($expiryDate)->days;
+
+                        // Kalau sisa kurang dari 30 hari -> WARNA KUNING (Warning)
+                        if ($diff <= 30) {
+                            $cardClass = 'expiring-client';
+                            $badgeClass = 'warning-badge';
+                            $badgeIcon = 'fa-exclamation-triangle';
+                            $badgeText = 'Expires Soon';
+                            $statusDot = 'away'; // Titik kuning
+                        } else {
+                            // Masih lama -> WARNA HIJAU (Active)
+                            $cardClass = '';
+                            $badgeClass = 'active-badge';
+                            $badgeIcon = 'fa-check-circle';
+                            $badgeText = 'Active';
+                            $statusDot = 'online'; // Titik hijau
+                        }
+                    }
+                    // 2. Cek User EXPIRED (Visa Approved tapi Sudah Lewat Tanggal)
+                    elseif ($client['last_status'] == 'approved' && $expiryDate < $today) {
+                        $cardClass = 'expired-client';
+                        $badgeClass = 'expired-badge';
+                        $badgeIcon = 'fa-times-circle';
+                        $badgeText = 'Expired';
+                        $statusDot = 'offline';
+                    }
+                    // 3. Cek User PENDING (Sedang proses bikin visa)
+                    elseif (in_array($client['last_status'], ['verification_process', 'submitted_immigration'])) {
+                        $badgeClass = 'new-badge'; // Pakai warna biru
+                        $badgeIcon = 'fa-spinner fa-spin';
+                        $badgeText = 'Processing';
+                        $statusDot = 'away';
+                    }
+                    ?>
+
+                    <div class="client-card <?= $cardClass ?>">
+                        <div class="client-card-header">
+                            <div class="client-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=<?= urlencode($client['full_name']) ?>&background=random&color=fff"
+                                    alt="Client">
+                                <span class="client-status <?= $statusDot ?>"></span>
+                            </div>
+                            <div class="client-badge <?= $badgeClass ?>">
+                                <i class="fas <?= $badgeIcon ?>"></i> <?= $badgeText ?>
+                            </div>
                         </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 812-3456-7890</span>
+
+                        <div class="client-card-body">
+                            <h3 class="client-name"><?= esc($client['full_name']) ?></h3>
+                            <p class="client-email"><?= esc($client['email']) ?></p>
+
+                            <div class="client-details">
+                                <div class="client-detail-item">
+                                    <i class="fas fa-flag"></i>
+                                    <span><?= esc($client['nationality'] ?? '-') ?></span>
+                                </div>
+                                <div class="client-detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span><?= esc($client['phone_number'] ?? '-') ?></span>
+                                </div>
+                                <div class="client-detail-item">
+                                    <i class="fas fa-passport"></i>
+                                    <span><?= esc($client['passport_number'] ?? '-') ?></span>
+                                </div>
+                            </div>
+
+                            <div class="client-visa-info">
+                                <div class="visa-info-item">
+                                    <span class="visa-label">Visa Terakhir</span>
+                                    <span class="visa-value">
+                                        <?= $client['last_visa_code'] ?? '-' ?>
+                                    </span>
+                                </div>
+                                <div class="visa-info-item">
+                                    <span class="visa-label">Total Aplikasi</span>
+                                    <span class="visa-value"><?= $client['total_orders'] ?> kali</span>
+                                </div>
+                            </div>
+
+                            <?php if ($expiryDate): ?>
+                                <?php
+                                $expiryTextClass = ($expiryDate < $today) ? 'expired' : (($today->diff($expiryDate)->days <= 30) ? 'warning' : '');
+                                ?>
+                                <div class="client-expiry <?= $expiryTextClass ?>">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Expires: <strong><?= $expiryDate->format('d M Y') ?></strong></span>
+                                </div>
+                            <?php else: ?>
+                                <div class="client-expiry pending">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Belum ada visa aktif</span>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>A12345678</span>
-                        </div>
-                    </div>
 
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Aktif</span>
-                            <span class="visa-value">KITAS 317</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">5 kali</span>
-                        </div>
-                    </div>
+                        <div class="client-card-footer">
+                            <button class="btn-client-action btn-view-history">
+                                <i class="fas fa-history"></i> Riwayat
+                            </button>
+                            <?php if ($badgeText == 'Expired'): ?>
+                                <button class="btn-client-action btn-offer-renewal" style="color: #d63384;">
+                                    <i class="fas fa-redo"></i> Renewal
+                                </button>
+                            <?php else: ?>
+                                <button class="btn-client-action btn-send-message">
+                                    <i class="fas fa-envelope"></i> Pesan
+                                </button>
+                            <?php endif; ?>
 
-                    <div class="client-expiry">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Visa expires: <strong>25 Dec 2025</strong></span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-send-message">
-                        <i class="fas fa-envelope"></i> Kirim Pesan
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CLIENT 2 - EXPIRING SOON -->
-            <div class="client-card expiring-client">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Maria+Garcia&background=6c757d&color=fff"
-                            alt="Client">
-                        <span class="client-status away"></span>
-                    </div>
-                    <div class="client-badge warning-badge">
-                        <i class="fas fa-exclamation-triangle"></i> Expires Soon
-                    </div>
-                </div>
-
-                <div class="client-card-body">
-                    <h3 class="client-name">Maria Garcia</h3>
-                    <p class="client-email">maria.garcia@email.com</p>
-
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>Spain</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 813-9876-5432</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>B98765432</span>
-                        </div>
-                    </div>
-
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Aktif</span>
-                            <span class="visa-value">B211A</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">2 kali</span>
-                        </div>
-                    </div>
-
-                    <div class="client-expiry warning">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>Visa expires: <strong class="text-danger">05 Dec 2025</strong> (12 days)</span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-send-message">
-                        <i class="fas fa-envelope"></i> Kirim Pesan
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CLIENT 3 - REGULAR -->
-            <div class="client-card">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=David+Lee&background=28a745&color=fff" alt="Client">
-                        <span class="client-status online"></span>
-                    </div>
-                    <div class="client-badge active-badge">
-                        <i class="fas fa-check-circle"></i> Active
-                    </div>
-                </div>
-
-                <div class="client-card-body">
-                    <h3 class="client-name">David Lee</h3>
-                    <p class="client-email">david.lee@email.com</p>
-
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>Singapore</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 815-1234-5678</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>C11223344</span>
+                            <button class="btn-client-action btn-more">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Aktif</span>
-                            <span class="visa-value">VOA</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">1 kali</span>
-                        </div>
-                    </div>
-
-                    <div class="client-expiry">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Visa expires: <strong>15 Jan 2026</strong></span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-send-message">
-                        <i class="fas fa-envelope"></i> Kirim Pesan
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CLIENT 4 - NEW -->
-            <div class="client-card new-client">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=ffc107&color=000"
-                            alt="Client">
-                        <span class="client-status offline"></span>
-                    </div>
-                    <div class="client-badge new-badge">
-                        <i class="fas fa-star"></i> New
-                    </div>
-                </div>
-
-                <div class="client-card-body">
-                    <h3 class="client-name">Sarah Johnson</h3>
-                    <p class="client-email">sarah.j@email.com</p>
-
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>United States</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 816-5555-1234</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>D55667788</span>
-                        </div>
-                    </div>
-
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Aktif</span>
-                            <span class="visa-value text-muted">-</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">Pending</span>
-                        </div>
-                    </div>
-
-                    <div class="client-expiry pending">
-                        <i class="fas fa-hourglass-half"></i>
-                        <span>Aplikasi sedang diproses</span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-send-message">
-                        <i class="fas fa-envelope"></i> Kirim Pesan
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CLIENT 5 - EXPIRED -->
-            <div class="client-card expired-client">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Robert+Chen&background=dc3545&color=fff"
-                            alt="Client">
-                        <span class="client-status offline"></span>
-                    </div>
-                    <div class="client-badge expired-badge">
-                        <i class="fas fa-times-circle"></i> Expired
-                    </div>
-                </div>
-
-                <div class="client-card-body">
-                    <h3 class="client-name">Robert Chen</h3>
-                    <p class="client-email">robert.chen@email.com</p>
-
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>China</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 817-9999-8888</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>E99887766</span>
-                        </div>
-                    </div>
-
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Terakhir</span>
-                            <span class="visa-value">KITAS 317</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">3 kali</span>
-                        </div>
-                    </div>
-
-                    <div class="client-expiry expired">
-                        <i class="fas fa-ban"></i>
-                        <span>Visa expired: <strong class="text-danger">10 Oct 2025</strong></span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-offer-renewal">
-                        <i class="fas fa-redo"></i> Tawarkan Renewal
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CLIENT 6 -->
-            <div class="client-card">
-                <div class="client-card-header">
-                    <div class="client-avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Emma+Wilson&background=9c27b0&color=fff"
-                            alt="Client">
-                        <span class="client-status online"></span>
-                    </div>
-                    <div class="client-badge active-badge">
-                        <i class="fas fa-check-circle"></i> Active
-                    </div>
-                </div>
-
-                <div class="client-card-body">
-                    <h3 class="client-name">Emma Wilson</h3>
-                    <p class="client-email">emma.wilson@email.com</p>
-
-                    <div class="client-details">
-                        <div class="client-detail-item">
-                            <i class="fas fa-flag"></i>
-                            <span>United Kingdom</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+62 818-7777-6666</span>
-                        </div>
-                        <div class="client-detail-item">
-                            <i class="fas fa-passport"></i>
-                            <span>F44556677</span>
-                        </div>
-                    </div>
-
-                    <div class="client-visa-info">
-                        <div class="visa-info-item">
-                            <span class="visa-label">Visa Aktif</span>
-                            <span class="visa-value">B211A</span>
-                        </div>
-                        <div class="visa-info-item">
-                            <span class="visa-label">Total Aplikasi</span>
-                            <span class="visa-value">4 kali</span>
-                        </div>
-                    </div>
-
-                    <div class="client-expiry">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Visa expires: <strong>20 Feb 2026</strong></span>
-                    </div>
-                </div>
-
-                <div class="client-card-footer">
-                    <button class="btn-client-action btn-view-history">
-                        <i class="fas fa-history"></i> Riwayat
-                    </button>
-                    <button class="btn-client-action btn-send-message">
-                        <i class="fas fa-envelope"></i> Kirim Pesan
-                    </button>
-                    <button class="btn-client-action btn-more">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
 
         <!-- PAGINATION -->

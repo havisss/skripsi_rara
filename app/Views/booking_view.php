@@ -32,17 +32,14 @@
 
             <div class="form-group">
                 <label>Jenis Layanan Visa</label>
-                <select name="service_type" id="serviceType" onchange="updateForm()">
-                    <option value="voa" <?= ($selected_service == 'voa') ? 'selected' : '' ?>>Visa On Arrival (VOA)
-                    </option>
-                    <option value="b211" <?= ($selected_service == 'b211') ? 'selected' : '' ?>>Visa B211
-                        (Wisata/Bisnis)</option>
-                    <option value="kitas_investor" <?= ($selected_service == 'kitas_investor') ? 'selected' : '' ?>>
-                        KITAS Investor</option>
-                    <option value="visa_ext" <?= ($selected_service == 'visa_ext') ? 'selected' : '' ?>>Visa Extension
-                    </option>
-                    <option value="kitas_ext" <?= ($selected_service == 'kitas_ext') ? 'selected' : '' ?>>KITAS
-                        Extension</option>
+                <select name="service_type"
+                    onchange="window.location.href='<?= base_url('booking?service=') ?>'+this.value">
+                    <?php foreach ($all_visas as $visa) : ?>
+                        <option value="<?= $visa['code']; ?>"
+                            <?= ($visa['id'] == $selected_visa['id']) ? 'selected' : ''; ?>>
+                            <?= $visa['name']; ?> - Rp <?= number_format($visa['price'], 0, ',', '.'); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -54,20 +51,24 @@
                 </div>
             </div>
 
-            <div id="sec-voa" class="dynamic-section">
-                <h4><i class="fa-solid fa-plane"></i> Dokumen VOA</h4>
-                <div class="form-group">
-                    <label>Tiket Pesawat Kembali/Terusan</label>
-                    <input type="file" name="return_ticket" accept=".pdf,.jpg">
-                </div>
-                <div class="form-group">
-                    <label>Nomor Penerbangan Kedatangan</label>
-                    <input type="text" name="flight_number" placeholder="Contoh: GA 890">
-                </div>
-                <div class="form-group">
-                    <label>Tanggal Kedatangan</label>
-                    <input type="date" name="arrival_date">
-                </div>
+            <div class="dynamic-section active" style="display:block;">
+                <h4><i class="fa-solid fa-file-import"></i> Dokumen Syarat: <?= $selected_visa['name']; ?></h4>
+                <p class="hint"><?= $selected_visa['description']; ?></p>
+
+                <?php foreach ($requirements as $req) : ?>
+                    <div class="form-group">
+                        <label>
+                            <?= $req['document_name']; ?>
+                            <?= ($req['is_mandatory']) ? '<span style="color:red">*</span>' : '(Opsional)'; ?>
+                        </label>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="doc_<?= $req['id']; ?>"
+                                accept=".<?= str_replace(',', ',.', $req['file_type']); ?>"
+                                <?= ($req['is_mandatory']) ? 'required' : ''; ?>>
+                            <span class="hint">Format: <?= strtoupper($req['file_type']); ?></span>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <div id="sec-b211" class="dynamic-section">
@@ -125,7 +126,7 @@
                     <span class="hint">Khusus perpanjangan KITAS</span>
                 </div>
             </div>
-
+            <input type="hidden" name="visa_type_id" value="<?= $selected_visa['id']; ?>">
             <button type="submit" class="btn-submit">Kirim Pengajuan</button>
         </form>
     </div>

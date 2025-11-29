@@ -114,7 +114,7 @@ a {
    3. HERO SECTION
    ========================================= */
 .hero {
-  background-image: url("assets/bg1.jpg");
+  background-image: url("../../bg1.jpg");
   padding: 150px 5% 100px;
   text-align: center;
   color: #fff;

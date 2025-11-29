@@ -16,7 +16,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-details">
-                    <h3>12</h3>
+                    <h3><?= $count_pending; ?></h3>
                     <p>Pending Orders</p>
                     <small>Menunggu review</small>
                 </div>
@@ -27,7 +27,7 @@
                     <i class="fas fa-spinner"></i>
                 </div>
                 <div class="stat-details">
-                    <h3>8</h3>
+                    <h3><?= $count_process; ?></h3>
                     <p>In Process</p>
                     <small>Sedang diproses</small>
                 </div>
@@ -38,9 +38,9 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-details">
-                    <h3>45</h3>
+                    <h3><?= $count_completed; ?></h3>
                     <p>Completed</p>
-                    <small>Bulan ini</small>
+                    <small>Total disetujui</small>
                 </div>
             </div>
 
@@ -49,9 +49,9 @@
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div class="stat-details">
-                    <h3>3</h3>
+                    <h3><?= $count_rejected; ?></h3>
                     <p>Rejected</p>
-                    <small>Perlu perbaikan</small>
+                    <small>Ditolak/Batal</small>
                 </div>
             </div>
         </div>
@@ -65,61 +65,27 @@
                     <span class="badge badge-danger">5 Items</span>
                 </div>
                 <div class="urgent-list">
-                    <div class="urgent-item high-priority">
-                        <div class="urgent-icon">
-                            <i class="fas fa-passport"></i>
-                        </div>
-                        <div class="urgent-content">
-                            <h4>Visa Akan Kadaluarsa</h4>
-                            <p>John Smith - KITAS #VIS-2024-089</p>
-                            <small><i class="fas fa-calendar-alt"></i> Kadaluarsa dalam 5 hari</small>
-                        </div>
-                        <button class="btn-action btn-warning">
-                            <i class="fas fa-envelope"></i> Kirim Reminder
-                        </button>
-                    </div>
-
-                    <div class="urgent-item medium-priority">
-                        <div class="urgent-icon">
-                            <i class="fas fa-file-upload"></i>
-                        </div>
-                        <div class="urgent-content">
-                            <h4>Order Baru Belum Disentuh</h4>
-                            <p>Maria Garcia - B211A Extension</p>
-                            <small><i class="fas fa-clock"></i> 28 jam yang lalu</small>
-                        </div>
-                        <button class="btn-action btn-primary">
-                            <i class="fas fa-eye"></i> Review
-                        </button>
-                    </div>
-
-                    <div class="urgent-item high-priority">
-                        <div class="urgent-icon">
-                            <i class="fas fa-redo"></i>
-                        </div>
-                        <div class="urgent-content">
-                            <h4>Dokumen Revisi Diupload</h4>
-                            <p>David Lee - VOA On Arrival</p>
-                            <small><i class="fas fa-clock"></i> 3 jam yang lalu</small>
-                        </div>
-                        <button class="btn-action btn-primary">
-                            <i class="fas fa-check"></i> Verifikasi
-                        </button>
-                    </div>
-
-                    <div class="urgent-item low-priority">
-                        <div class="urgent-icon">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <div class="urgent-content">
-                            <h4>Pembayaran Menunggu Konfirmasi</h4>
-                            <p>Sarah Johnson - KITAS 317</p>
-                            <small><i class="fas fa-clock"></i> 6 jam yang lalu</small>
-                        </div>
-                        <button class="btn-action btn-success">
-                            <i class="fas fa-check-double"></i> Konfirmasi
-                        </button>
-                    </div>
+                    <?php if (empty($urgent_actions)): ?>
+                        <p style="padding:20px; text-align:center; color:#888;">Tidak ada aktivitas terbaru.</p>
+                    <?php else: ?>
+                        <?php foreach ($urgent_actions as $urgent): ?>
+                            <div class="urgent-item medium-priority">
+                                <div class="urgent-icon">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div class="urgent-content">
+                                    <h4>Permohonan Baru</h4>
+                                    <p><?= esc($urgent['full_name']); ?> - <?= esc($urgent['visa_name']); ?></p>
+                                    <small><i class="fas fa-clock"></i>
+                                        <?= date('d M H:i', strtotime($urgent['created_at'])); ?></small>
+                                </div>
+                                <button class="btn-action btn-primary"
+                                    onclick="window.location.href='<?= base_url('admin/applications/detail/' . $urgent['id']) ?>'">
+                                    <i class="fas fa-eye"></i> Review
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
