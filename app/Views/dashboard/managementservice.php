@@ -38,305 +38,64 @@
             </div>
 
             <div class="visa-types-grid">
-                <!-- VISA TYPE 1 - VOA -->
-                <div class="visa-type-card active-service">
-                    <div class="visa-type-header">
-                        <div class="visa-type-badge voa">
-                            <i class="fas fa-plane-arrival"></i>
-                        </div>
-                        <div class="visa-type-status">
-                            <span class="status-indicator active"></span>
-                            <span class="status-text">Active</span>
-                        </div>
-                    </div>
 
-                    <div class="visa-type-body">
-                        <h3 class="visa-type-name">VOA on Arrival</h3>
-                        <p class="visa-type-code">Code: VOA-001</p>
-
-                        <div class="visa-type-info">
-                            <div class="info-item">
-                                <span class="info-label">Harga</span>
-                                <span class="info-value price">Rp 1,500,000</span>
+                <?php foreach ($visas as $visa): ?>
+                    <div class="visa-type-card active-service">
+                        <div class="visa-type-header">
+                            <div class="visa-type-badge">
+                                <?php if (str_contains(strtolower($visa['name']), 'voa')): ?>
+                                    <i class="fas fa-plane-arrival"></i>
+                                <?php elseif (str_contains(strtolower($visa['name']), 'kitas')): ?>
+                                    <i class="fas fa-id-card"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-passport"></i>
+                                <?php endif; ?>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Durasi</span>
-                                <span class="info-value">30 hari</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dokumen</span>
-                                <span class="info-value">5 items</span>
+                            <div class="visa-type-status">
+                                <span class="status-indicator <?= ($visa['is_active']) ? 'active' : 'inactive'; ?>"></span>
+                                <span class="status-text"><?= ($visa['is_active']) ? 'Active' : 'Inactive'; ?></span>
                             </div>
                         </div>
 
-                        <div class="visa-type-description">
-                            <p>Visa on arrival untuk kunjungan singkat, dapat diperpanjang 1x hingga 60 hari.</p>
-                        </div>
+                        <div class="visa-type-body">
+                            <h3 class="visa-type-name"><?= esc($visa['name']); ?></h3>
+                            <p class="visa-type-code">Code: <?= esc($visa['code']); ?></p>
 
-                        <div class="visa-type-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <span>234 aplikasi</span>
+                            <div class="visa-type-info">
+                                <div class="info-item">
+                                    <span class="info-label">Harga</span>
+                                    <span class="info-value price">Rp
+                                        <?= number_format($visa['price'], 0, ',', '.'); ?></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Durasi</span>
+                                    <span class="info-value"><?= $visa['duration_days']; ?> hari</span>
+                                </div>
                             </div>
-                            <div class="stat-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>+15% bulan ini</span>
+
+                            <div class="visa-type-description">
+                                <p><?= esc($visa['description']); ?></p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="visa-type-footer">
-                        <button class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-action btn-view">
-                            <i class="fas fa-eye"></i> Detail
-                        </button>
-                        <button class="btn-action btn-toggle">
-                            <i class="fas fa-toggle-on"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VISA TYPE 2 - B211A -->
-                <div class="visa-type-card active-service">
-                    <div class="visa-type-header">
-                        <div class="visa-type-badge b211">
-                            <i class="fas fa-calendar-plus"></i>
-                        </div>
-                        <div class="visa-type-status">
-                            <span class="status-indicator active"></span>
-                            <span class="status-text">Active</span>
+                        <div class="visa-type-footer">
+                            <button type="button" class="btn-action btn-edit"
+                                onclick="openEditModal('<?= $visa['id'] ?>', '<?= esc($visa['name']) ?>', '<?= $visa['price'] ?>', '<?= $visa['duration_days'] ?>', '<?= esc($visa['description']) ?>', <?= $visa['is_active'] ?>)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <?php if ($visa['is_active']): ?>
+                                <button class="btn-action btn-toggle">
+                                    <i class="fas fa-toggle-on"></i>
+                                </button>
+                            <?php else: ?>
+                                <button class="btn-action btn-toggle-off">
+                                    <i class="fas fa-toggle-off"></i>
+                                </button>
+                            <?php endif; ?>
                         </div>
                     </div>
+                <?php endforeach; ?>
 
-                    <div class="visa-type-body">
-                        <h3 class="visa-type-name">B211A Extension</h3>
-                        <p class="visa-type-code">Code: B211-002</p>
-
-                        <div class="visa-type-info">
-                            <div class="info-item">
-                                <span class="info-label">Harga</span>
-                                <span class="info-value price">Rp 4,500,000</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Durasi</span>
-                                <span class="info-value">60 hari</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dokumen</span>
-                                <span class="info-value">8 items</span>
-                            </div>
-                        </div>
-
-                        <div class="visa-type-description">
-                            <p>Visa sosial budaya untuk kunjungan lebih lama, dapat diperpanjang hingga 6 bulan.</p>
-                        </div>
-
-                        <div class="visa-type-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <span>156 aplikasi</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>+8% bulan ini</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-footer">
-                        <button class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-action btn-view">
-                            <i class="fas fa-eye"></i> Detail
-                        </button>
-                        <button class="btn-action btn-toggle">
-                            <i class="fas fa-toggle-on"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VISA TYPE 3 - KITAS 317 -->
-                <div class="visa-type-card active-service">
-                    <div class="visa-type-header">
-                        <div class="visa-type-badge kitas">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <div class="visa-type-status">
-                            <span class="status-indicator active"></span>
-                            <span class="status-text">Active</span>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-body">
-                        <h3 class="visa-type-name">KITAS 317</h3>
-                        <p class="visa-type-code">Code: KITAS-003</p>
-
-                        <div class="visa-type-info">
-                            <div class="info-item">
-                                <span class="info-label">Harga</span>
-                                <span class="info-value price">Rp 12,500,000</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Durasi</span>
-                                <span class="info-value">1 tahun</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dokumen</span>
-                                <span class="info-value">12 items</span>
-                            </div>
-                        </div>
-
-                        <div class="visa-type-description">
-                            <p>Kartu izin tinggal terbatas untuk bekerja atau tinggal jangka panjang di Indonesia.</p>
-                        </div>
-
-                        <div class="visa-type-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <span>89 aplikasi</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>+12% bulan ini</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-footer">
-                        <button class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-action btn-view">
-                            <i class="fas fa-eye"></i> Detail
-                        </button>
-                        <button class="btn-action btn-toggle">
-                            <i class="fas fa-toggle-on"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VISA TYPE 4 - KITAP -->
-                <div class="visa-type-card active-service">
-                    <div class="visa-type-header">
-                        <div class="visa-type-badge kitap">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <div class="visa-type-status">
-                            <span class="status-indicator active"></span>
-                            <span class="status-text">Active</span>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-body">
-                        <h3 class="visa-type-name">KITAP (Permanent Stay)</h3>
-                        <p class="visa-type-code">Code: KITAP-004</p>
-
-                        <div class="visa-type-info">
-                            <div class="info-item">
-                                <span class="info-label">Harga</span>
-                                <span class="info-value price">Rp 25,000,000</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Durasi</span>
-                                <span class="info-value">5 tahun</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dokumen</span>
-                                <span class="info-value">15 items</span>
-                            </div>
-                        </div>
-
-                        <div class="visa-type-description">
-                            <p>Kartu izin tinggal tetap untuk warga negara asing yang ingin menetap di Indonesia.</p>
-                        </div>
-
-                        <div class="visa-type-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <span>23 aplikasi</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>+5% bulan ini</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-footer">
-                        <button class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-action btn-view">
-                            <i class="fas fa-eye"></i> Detail
-                        </button>
-                        <button class="btn-action btn-toggle">
-                            <i class="fas fa-toggle-on"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VISA TYPE 5 - E-VOA (INACTIVE) -->
-                <div class="visa-type-card inactive-service">
-                    <div class="visa-type-header">
-                        <div class="visa-type-badge evoa">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div class="visa-type-status">
-                            <span class="status-indicator inactive"></span>
-                            <span class="status-text">Inactive</span>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-body">
-                        <h3 class="visa-type-name">E-VOA (Electronic)</h3>
-                        <p class="visa-type-code">Code: EVOA-005</p>
-
-                        <div class="visa-type-info">
-                            <div class="info-item">
-                                <span class="info-label">Harga</span>
-                                <span class="info-value price">Rp 800,000</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Durasi</span>
-                                <span class="info-value">30 hari</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dokumen</span>
-                                <span class="info-value">3 items</span>
-                            </div>
-                        </div>
-
-                        <div class="visa-type-description">
-                            <p>Visa elektronik untuk aplikasi online sebelum kedatangan (sementara tidak aktif).</p>
-                        </div>
-
-                        <div class="visa-type-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <span>0 aplikasi</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-ban"></i>
-                                <span>Ditangguhkan</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="visa-type-footer">
-                        <button class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-action btn-view">
-                            <i class="fas fa-eye"></i> Detail
-                        </button>
-                        <button class="btn-action btn-toggle-off">
-                            <i class="fas fa-toggle-off"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -358,193 +117,47 @@
             </div>
 
             <div class="requirements-container">
-                <!-- REQUIREMENT 1 -->
-                <div class="requirement-item">
-                    <div class="requirement-header">
-                        <div class="requirement-drag">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                        <div class="requirement-info">
-                            <h4>Passport Copy</h4>
-                            <span class="requirement-mandatory">
-                                <i class="fas fa-asterisk"></i> Mandatory
-                            </span>
-                        </div>
-                        <div class="requirement-actions">
-                            <button class="btn-req-action edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-req-action delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="detail-item">
-                            <span class="detail-label">File Type:</span>
-                            <span class="detail-value">PDF, JPG, PNG</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Max Size:</span>
-                            <span class="detail-value">5 MB</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Description:</span>
-                            <span class="detail-value">Scan paspor halaman identitas, minimal 6 bulan masa
-                                berlaku</span>
-                        </div>
-                    </div>
-                </div>
+                <?php if (empty($requirements)): ?>
+                    <p class="text-center p-3">Belum ada persyaratan dokumen.</p>
+                <?php else: ?>
+                    <?php foreach ($requirements as $req): ?>
+                        <div class="requirement-item <?= ($req['is_mandatory']) ? '' : 'optional'; ?>">
+                            <div class="requirement-header">
+                                <div class="requirement-drag">
+                                    <i class="fas fa-grip-vertical"></i>
+                                </div>
+                                <div class="requirement-info">
+                                    <h4><?= esc($req['document_name']); ?></h4>
+                                    <small class="text-muted">Untuk: <?= esc($req['visa_name']); ?></small>
 
-                <!-- REQUIREMENT 2 -->
-                <div class="requirement-item">
-                    <div class="requirement-header">
-                        <div class="requirement-drag">
-                            <i class="fas fa-grip-vertical"></i>
+                                    <?php if ($req['is_mandatory']): ?>
+                                        <span class="requirement-mandatory">
+                                            <i class="fas fa-asterisk"></i> Mandatory
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="requirement-optional">
+                                            <i class="fas fa-circle"></i> Optional
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="requirement-actions">
+                                    <button class="btn-req-action edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-req-action delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="requirement-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">File Type:</span>
+                                    <span class="detail-value"><?= strtoupper($req['file_type']); ?></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="requirement-info">
-                            <h4>Passport Photo (4x6)</h4>
-                            <span class="requirement-mandatory">
-                                <i class="fas fa-asterisk"></i> Mandatory
-                            </span>
-                        </div>
-                        <div class="requirement-actions">
-                            <button class="btn-req-action edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-req-action delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="detail-item">
-                            <span class="detail-label">File Type:</span>
-                            <span class="detail-value">JPG, PNG</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Max Size:</span>
-                            <span class="detail-value">2 MB</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Description:</span>
-                            <span class="detail-value">Foto ukuran 4x6 cm, latar belakang putih, foto terbaru (3 bulan
-                                terakhir)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- REQUIREMENT 3 -->
-                <div class="requirement-item">
-                    <div class="requirement-header">
-                        <div class="requirement-drag">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                        <div class="requirement-info">
-                            <h4>Flight Ticket</h4>
-                            <span class="requirement-mandatory">
-                                <i class="fas fa-asterisk"></i> Mandatory
-                            </span>
-                        </div>
-                        <div class="requirement-actions">
-                            <button class="btn-req-action edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-req-action delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="detail-item">
-                            <span class="detail-label">File Type:</span>
-                            <span class="detail-value">PDF, JPG, PNG</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Max Size:</span>
-                            <span class="detail-value">3 MB</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Description:</span>
-                            <span class="detail-value">Tiket pesawat pulang-pergi atau tiket keluar dari
-                                Indonesia</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- REQUIREMENT 4 -->
-                <div class="requirement-item">
-                    <div class="requirement-header">
-                        <div class="requirement-drag">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                        <div class="requirement-info">
-                            <h4>Proof of Accommodation</h4>
-                            <span class="requirement-mandatory">
-                                <i class="fas fa-asterisk"></i> Mandatory
-                            </span>
-                        </div>
-                        <div class="requirement-actions">
-                            <button class="btn-req-action edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-req-action delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="detail-item">
-                            <span class="detail-label">File Type:</span>
-                            <span class="detail-value">PDF, JPG, PNG</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Max Size:</span>
-                            <span class="detail-value">3 MB</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Description:</span>
-                            <span class="detail-value">Bukti booking hotel atau surat keterangan tempat tinggal</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- REQUIREMENT 5 - OPTIONAL -->
-                <div class="requirement-item optional">
-                    <div class="requirement-header">
-                        <div class="requirement-drag">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                        <div class="requirement-info">
-                            <h4>Vaccination Certificate</h4>
-                            <span class="requirement-optional">
-                                <i class="fas fa-circle"></i> Optional
-                            </span>
-                        </div>
-                        <div class="requirement-actions">
-                            <button class="btn-req-action edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-req-action delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="detail-item">
-                            <span class="detail-label">File Type:</span>
-                            <span class="detail-value">PDF, JPG</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Max Size:</span>
-                            <span class="detail-value">2 MB</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Description:</span>
-                            <span class="detail-value">Kartu vaksinasi COVID-19 (jika tersedia)</span>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -682,5 +295,89 @@
         </div>
     </div>
 </div>
+
+
+
+<div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+
+    <div style="background:white; width:500px; padding:30px; border-radius:10px; box-shadow:0 5px 20px rgba(0,0,0,0.2); position:relative; animation: slideDown 0.3s ease;">
+
+        <h2 style="margin-top:0; margin-bottom:20px; color:#333;">Edit Layanan Visa</h2>
+
+        <form action="<?= base_url('dashboard/managementservice/update') ?>" method="post">
+            <input type="hidden" name="id" id="edit_id">
+
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold;">Nama Visa</label>
+                <input type="text" id="edit_name" disabled style="width:100%; padding:10px; border:1px solid #ddd; background:#f9f9f9; border-radius:5px;">
+                <small style="color:#888;">Nama visa tidak dapat diubah (Terkait sistem).</small>
+            </div>
+
+            <div style="display:flex; gap:15px; margin-bottom:15px;">
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Harga (Rp)</label>
+                    <input type="number" name="price" id="edit_price" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                </div>
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Durasi (Hari)</label>
+                    <input type="number" name="duration" id="edit_duration" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold;">Deskripsi Singkat</label>
+                <textarea name="description" id="edit_description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;"></textarea>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" name="is_active" id="edit_active" value="1">
+                    <span>Aktifkan Layanan ini?</span>
+                </label>
+            </div>
+
+            <div style="text-align:right; border-top:1px solid #eee; padding-top:20px;">
+                <button type="button" onclick="document.getElementById('editModal').style.display='none'" style="padding:10px 20px; background:transparent; border:1px solid #ccc; border-radius:5px; cursor:pointer; margin-right:10px;">Batal</button>
+                <button type="submit" style="padding:10px 20px; background:#0d6efd; color:white; border:none; border-radius:5px; cursor:pointer;">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Fungsi untuk membuka modal dan mengisi data
+    function openEditModal(id, name, price, duration, description, isActive) {
+        document.getElementById('editModal').style.display = 'flex';
+
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_price').value = price;
+        document.getElementById('edit_duration').value = duration;
+        document.getElementById('edit_description').value = description;
+        document.getElementById('edit_active').checked = (isActive == 1);
+    }
+
+    // Menutup modal jika klik di luar area putih
+    window.onclick = function(event) {
+        let modal = document.getElementById('editModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+<style>
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 
 <?= $this->endSection() ?>

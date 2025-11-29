@@ -65,8 +65,8 @@
                 </a>
             </li>
             <li>
-                <a href="<?= base_url('dashboard/messages') ?>"
-                    class="<?= (uri_string() == 'dashboard/messages') ? 'active' : '' ?>">
+                <a href="<?= base_url('dashboard/transaksi') ?>"
+                    class="<?= (uri_string() == 'dashboard/transaksi') ? 'active' : '' ?>">
                     <i class="fas fa-envelope"></i>
                     <span>transaksi</span>
                 </a>

@@ -119,270 +119,84 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- ORDER 1 - URGENT -->
-                        <tr class="order-row urgent-row">
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <span class="order-id">#INV-2024001</span>
-                            </td>
-                            <td>
-                                <div class="client-info">
-                                    <img src="https://ui-avatars.com/api/?name=John+Smith&background=0d6efd&color=fff"
-                                        alt="Client">
-                                    <div>
-                                        <strong>John Smith</strong>
-                                        <small>john.smith@email.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-visa voa">VOA on Arrival</span>
-                            </td>
-                            <td>
-                                <span class="date-text">20 Nov 2024</span>
-                                <small class="time-ago">2 hari lalu</small>
-                            </td>
-                            <td>
-                                <span class="status-badge status-uploaded">
-                                    <i class="fas fa-check-circle"></i> Uploaded
-                                </span>
-                            </td>
-                            <td>
-                                <span class="status-badge status-pending">
-                                    <i class="fas fa-clock"></i> Pending Review
-                                </span>
-                            </td>
-                            <td>
-                                <span class="priority-badge high">
-                                    <i class="fas fa-exclamation-circle"></i> High
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-view" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn-icon btn-edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-more" title="More">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- ORDER 2 - REVISION NEEDED -->
-                        <tr class="order-row revision-row">
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <span class="order-id">#INV-2024002</span>
-                            </td>
-                            <td>
-                                <div class="client-info">
-                                    <img src="https://ui-avatars.com/api/?name=Maria+Garcia&background=6c757d&color=fff"
-                                        alt="Client">
-                                    <div>
-                                        <strong>Maria Garcia</strong>
-                                        <small>maria.garcia@email.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-visa b211">B211A Extension</span>
-                            </td>
-                            <td>
-                                <span class="date-text">19 Nov 2024</span>
-                                <small class="time-ago">3 hari lalu</small>
-                            </td>
-                            <td>
-                                <span class="status-badge status-revision">
-                                    <i class="fas fa-redo"></i> Need Revision
-                                </span>
-                            </td>
-                            <td>
-                                <span class="status-badge status-rejected">
-                                    <i class="fas fa-times-circle"></i> Rejected
-                                </span>
-                            </td>
-                            <td>
-                                <span class="priority-badge medium">
-                                    <i class="fas fa-minus-circle"></i> Medium
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-view" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn-icon btn-edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-more" title="More">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- ORDER 3 - IN PROCESS -->
-                        <tr class="order-row">
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <span class="order-id">#INV-2024003</span>
-                            </td>
-                            <td>
-                                <div class="client-info">
-                                    <img src="https://ui-avatars.com/api/?name=David+Lee&background=28a745&color=fff"
-                                        alt="Client">
-                                    <div>
-                                        <strong>David Lee</strong>
-                                        <small>david.lee@email.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-visa kitas">KITAS 317</span>
-                            </td>
-                            <td>
-                                <span class="date-text">18 Nov 2024</span>
-                                <small class="time-ago">4 hari lalu</small>
-                            </td>
-                            <td>
-                                <span class="status-badge status-verified">
-                                    <i class="fas fa-check-double"></i> Verified
-                                </span>
-                            </td>
-                            <td>
-                                <span class="status-badge status-in-process">
-                                    <i class="fas fa-spinner"></i> In Process
-                                </span>
-                            </td>
-                            <td>
-                                <span class="priority-badge low">
-                                    <i class="fas fa-check-circle"></i> Low
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-view" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn-icon btn-edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-more" title="More">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- ORDER 4 - COMPLETED -->
-                        <tr class="order-row">
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <span class="order-id">#INV-2024004</span>
-                            </td>
-                            <td>
-                                <div class="client-info">
-                                    <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=ffc107&color=000"
-                                        alt="Client">
-                                    <div>
-                                        <strong>Sarah Johnson</strong>
-                                        <small>sarah.j@email.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-visa voa">VOA on Arrival</span>
-                            </td>
-                            <td>
-                                <span class="date-text">15 Nov 2024</span>
-                                <small class="time-ago">7 hari lalu</small>
-                            </td>
-                            <td>
-                                <span class="status-badge status-verified">
-                                    <i class="fas fa-check-double"></i> Verified
-                                </span>
-                            </td>
-                            <td>
-                                <span class="status-badge status-completed">
-                                    <i class="fas fa-check-circle"></i> Completed
-                                </span>
-                            </td>
-                            <td>
-                                <span class="priority-badge low">
-                                    <i class="fas fa-check-circle"></i> Low
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-view" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn-icon btn-edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-more" title="More">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- ORDER 5 - PARTIAL DOCUMENTS -->
-                        <tr class="order-row">
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <span class="order-id">#INV-2024005</span>
-                            </td>
-                            <td>
-                                <div class="client-info">
-                                    <img src="https://ui-avatars.com/api/?name=Robert+Chen&background=dc3545&color=fff"
-                                        alt="Client">
-                                    <div>
-                                        <strong>Robert Chen</strong>
-                                        <small>robert.chen@email.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-visa kitap">KITAP</span>
-                            </td>
-                            <td>
-                                <span class="date-text">22 Nov 2024</span>
-                                <small class="time-ago">Hari ini</small>
-                            </td>
-                            <td>
-                                <span class="status-badge status-partial">
-                                    <i class="fas fa-exclamation-triangle"></i> Partial
-                                </span>
-                            </td>
-                            <td>
-                                <span class="status-badge status-pending">
-                                    <i class="fas fa-clock"></i> Pending
-                                </span>
-                            </td>
-                            <td>
-                                <span class="priority-badge medium">
-                                    <i class="fas fa-minus-circle"></i> Medium
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-view" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn-icon btn-edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-more" title="More">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php if (empty($orders)) : ?>
+                            <tr>
+                                <td colspan="9" style="text-align:center; padding: 20px;">Belum ada data permohonan masuk.
+                                </td>
+                            </tr>
+                        <?php else : ?>
+                            <?php foreach ($orders as $item) : ?>
+                                <tr class="order-row">
+                                    <td><input type="checkbox"></td>
+                                    <td>
+                                        <span class="order-id">#<?= $item['invoice_number']; ?></span>
+                                    </td>
+                                    <td>
+                                        <div class="client-info">
+                                            <img src="https://ui-avatars.com/api/?name=<?= urlencode($item['full_name']); ?>&background=random&color=fff"
+                                                alt="Client">
+                                            <div>
+                                                <strong><?= esc($item['full_name']); ?></strong>
+                                                <small><?= esc($item['email']); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $badgeClass = 'voa'; // default
+                                        if (str_contains(strtolower($item['visa_code']), 'kitas')) $badgeClass = 'kitas';
+                                        if (str_contains(strtolower($item['visa_code']), 'b211')) $badgeClass = 'b211';
+                                        ?>
+                                        <span class="badge-visa <?= $badgeClass; ?>"><?= esc($item['visa_name']); ?></span>
+                                    </td>
+                                    <td>
+                                        <span class="date-text"><?= date('d M Y', strtotime($item['created_at'])); ?></span>
+                                        <small class="time-ago">
+                                            <?= floor((time() - strtotime($item['created_at'])) / (60 * 60 * 24)); ?> hari lalu
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-uploaded">
+                                            <i class="fas fa-check-circle"></i> Uploaded
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $statusClass = 'status-pending';
+                                        $icon = 'fa-clock';
+                                        if ($item['status'] == 'approved') {
+                                            $statusClass = 'status-completed';
+                                            $icon = 'fa-check-circle';
+                                        }
+                                        if ($item['status'] == 'rejected') {
+                                            $statusClass = 'status-rejected';
+                                            $icon = 'fa-times-circle';
+                                        }
+                                        ?>
+                                        <span class="status-badge <?= $statusClass; ?>">
+                                            <i class="fas <?= $icon; ?>"></i>
+                                            <?= ucwords(str_replace('_', ' ', $item['status'])); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="priority-badge medium">
+                                            <i class="fas fa-minus-circle"></i> Medium
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="<?= base_url('dashboard/managementorder/detail/' . $item['id']); ?>"
+                                                class="btn-icon btn-view" title="Lihat Detail">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <button class="btn-icon btn-edit" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
