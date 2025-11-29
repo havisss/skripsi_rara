@@ -72,7 +72,7 @@
                 </a>
             </li>
             <div class="logout-btn">
-                <a href="<?= base_url('logout') ?>">
+                <a href="<?= base_url('admin/logout') ?>">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>LOGOUT</span>
                 </a>

@@ -14,6 +14,22 @@ $routes->get('/', 'Home::index');
 
 // Route untuk menampilkan halaman formulir
 
+
+$routes->group('admin', function($routes) {
+    
+    // 1. Tampilkan Halaman Login (GET)
+    // Mengarah ke Controller LoginAdmin, fungsi index
+    $routes->get('login', 'LoginAdmin::index');
+    
+    // 2. Proses Cek Password (POST)
+    // Mengarah ke Controller LoginAdmin, fungsi auth
+    $routes->post('auth', 'LoginAdmin::auth');
+    
+    // 3. Logout
+    $routes->get('logout', 'LoginAdmin::logout');
+    
+});
+
 $routes->get('/login', 'Auth::index');           // Menampilkan halaman login
 $routes->post('/login/auth', 'Auth::loginProcess'); // Proses validasi login
 $routes->get('/register', 'Auth::register');            // Halaman form daftar
@@ -27,7 +43,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('/booking/submit', 'Booking::submit');
     $routes->get('/booking/success/(:segment)', 'Booking::success/$1');
 });
-
 
 
 
