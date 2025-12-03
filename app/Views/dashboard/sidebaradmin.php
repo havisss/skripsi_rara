@@ -67,8 +67,7 @@
             <li>
                 <a href="<?= base_url('dashboard/transaksi') ?>"
                     class="<?= (uri_string() == 'dashboard/transaksi') ? 'active' : '' ?>">
-                    <i class="fas fa-envelope"></i>
-                    <span>Transaksi</span>
+                    <i class="fas fa-file-invoice-dollar"></i> <span>Transaksi</span>
                 </a>
             </li>
             <div class="logout-btn">

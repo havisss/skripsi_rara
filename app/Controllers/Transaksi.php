@@ -2,52 +2,53 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use App\Models\OrderModel; // Kita pakai OrderModel karena data uang ada di tabel order
+use App\Models\ApplicationModel;
 
 class Transaksi extends BaseController
 {
     public function index()
     {
-        $orderModel = new OrderModel();
+        helper('url');
+        $appModel = new ApplicationModel();
 
-        // 1. Ambil semua data order (sekarang sudah ada harganya)
-        $orders = $orderModel->getOrdersLengkap();
+        // Ambil data aplikasi JOIN users dan visa_types
+        // Fokus pada status pembayaran dan invoice
+        $transactions = $appModel->select('applications.*, users.full_name, users.email, visa_types.name as visa_name, visa_types.price')
+            ->join('users', 'users.id = applications.user_id')
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id')
+            ->orderBy('applications.created_at', 'DESC')
+            ->findAll();
 
-        // 2. HITUNG DUIT (Statistik)
-        // Kita siapkan wadah nol dulu
+        // Hitung total pendapatan (yang statusnya sudah 'paid')
         $totalRevenue = 0;
-        $confirmedCount = 0;
-        $pendingRevenue = 0;
-        $pendingCount = 0;
-
-        // Kita cek satu per satu order untuk dijumlahkan
-        foreach ($orders as $order) {
-            $harga = $order['visa_price'] ?? 0; // Ambil harga (kalau kosong anggap 0)
-
-            if ($order['payment_status'] == 'paid') {
-                // Kalau statusnya LUNAS -> Masuk ke Revenue
-                $totalRevenue += $harga;
-                $confirmedCount++;
-            } else {
-                // Kalau statusnya BELUM LUNAS -> Masuk ke Pending
-                $pendingRevenue += $harga;
-                $pendingCount++;
+        foreach ($transactions as $t) {
+            if ($t['payment_status'] == 'paid') {
+                $totalRevenue += $t['price'];
             }
         }
 
-        // 3. Bungkus data untuk dikirim ke View
         $data = [
-            'title' => 'Transaksi & Keuangan',
-            'orders' => $orders, // Daftar semua transaksi untuk tabel
-            'stats' => [         // Hasil hitungan tadi
-                'revenue' => $totalRevenue,
-                'confirmed_count' => $confirmedCount,
-                'pending_revenue' => $pendingRevenue,
-                'pending_count' => $pendingCount
-            ]
+            'transactions' => $transactions,
+            'totalRevenue' => $totalRevenue
         ];
 
         return view('dashboard/transaksi', $data);
+    }
+
+    public function confirm()
+    {
+        $appModel = new ApplicationModel();
+        $id = $this->request->getPost('id');
+
+        // Update status pembayaran jadi PAID
+        // Dan update status aplikasi jadi 'upload_pending' (jika sebelumnya payment_pending)
+        // Agar user bisa lanjut upload berkas
+
+        $appModel->update($id, [
+            'payment_status' => 'paid',
+            'status' => 'upload_pending'
+        ]);
+
+        return redirect()->to('/dashboard/transaksi')->with('success', 'Pembayaran berhasil dikonfirmasi!');
     }
 }
