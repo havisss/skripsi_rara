@@ -14,35 +14,41 @@ class Booking extends BaseController
     {
         $visaModel = new VisaTypeModel();
         $reqModel = new VisaRequirementModel();
-        $userModel = new UserModel(); // Tambahkan ini
+        $userModel = new UserModel();
 
-        // 1. Ambil pilihan dari URL (misal: ?service=voa)
+        // 1. Get selected service code from URL
         $selectedCode = $this->request->getGet('service') ?? 'voa';
 
-        // 2. Cari Data Visa berdasarkan kode di database
+        // 2. Try to find the specific visa
         $selectedVisa = $visaModel->where('code', $selectedCode)->first();
 
-        // Jika kode ngawur/tidak ketemu, default ke VOA (ID 1)
+        // --- SAFETY FIX START ---
+        // If not found, try to find ANY visa in the database
         if (!$selectedVisa) {
-            $selectedVisa = $visaModel->find(1);
+            $selectedVisa = $visaModel->first();
         }
 
-        // 3. Ambil semua jenis visa untuk dropdown
+        // If the database is completely empty, stop here to avoid the error
+        if (!$selectedVisa) {
+            return "ERROR: Table 'visa_types' is empty. Please add data in phpMyAdmin.";
+        }
+        // --- SAFETY FIX END ---
+
+        // 3. Get all visas for the dropdown
         $allVisas = $visaModel->where('is_active', 1)->findAll();
 
-        // 4. Ambil syarat dokumen KHUSUS untuk visa yang dipilih
+        // 4. Get requirements for the selected visa
         $requirements = $reqModel->where('visa_type_id', $selectedVisa['id'])->findAll();
 
-        // --- TAMBAHAN BARU ---
-        // 5. Ambil Data User yang sedang Login untuk Auto-fill form
+        // 5. Get User Data for auto-fill
         $userId = session()->get('id');
-        $userData = $userModel->find($userId);
+        $userData = ($userId) ? $userModel->find($userId) : null;
 
         $data = [
             'selected_visa' => $selectedVisa,
             'all_visas'     => $allVisas,
             'requirements'  => $requirements,
-            'user'          => $userData // Kirim data user ke view
+            'user'          => $userData
         ];
 
         return view('booking_view', $data);
@@ -111,6 +117,37 @@ class Booking extends BaseController
 
     public function success($invoiceNumber)
     {
-        return view('success_view', ['invoice' => $invoiceNumber]);
+        $appModel = new ApplicationModel();
+
+        // Ambil data transaksi berdasarkan Invoice Number
+        // Kita join dengan tabel Users dan VisaTypes untuk dapat Nama & Harga
+        $transaction = $appModel->select('applications.*, users.full_name, visa_types.name as visa_name, visa_types.price')
+            ->join('users', 'users.id = applications.user_id')
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id')
+            ->where('invoice_number', $invoiceNumber)
+            ->first();
+
+        if (!$transaction) {
+            return redirect()->to('/')->with('error', 'Invoice tidak ditemukan');
+        }
+
+        // --- SETUP PESAN WHATSAPP ---
+        $adminPhone = '6281188090025'; // Ganti dengan nomor WhatsApp Admin Anda (format 62...)
+
+        $message = "Halo Admin Bali Fantastic, saya ingin konfirmasi pembayaran.\n\n";
+        $message .= "No Invoice: *" . $transaction['invoice_number'] . "*\n";
+        $message .= "Nama: " . $transaction['full_name'] . "\n";
+        $message .= "Layanan: " . $transaction['visa_name'] . "\n";
+        $message .= "Total Tagihan: *Rp " . number_format($transaction['price'], 0, ',', '.') . "*\n\n";
+        $message .= "Mohon diproses, Terima kasih.";
+
+        $waLink = "https://wa.me/" . $adminPhone . "?text=" . urlencode($message);
+
+        $data = [
+            'trx' => $transaction,
+            'waLink' => $waLink
+        ];
+
+        return view('success_view', $data);
     }
 }

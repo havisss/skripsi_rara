@@ -48,4 +48,36 @@ class ManagementService extends BaseController
 
         return redirect()->to('/dashboard/managementservice')->with('success', 'Data Visa berhasil diperbarui!');
     }
+    // --- TAMBAHKAN DI BAWAH METHOD UPDATE ---
+
+    public function save()
+    {
+        $visaModel = new VisaTypeModel();
+
+        // Buat Kode Unik otomatis (Misal: VOA-123) atau ambil dari input
+        // Di sini kita ambil dari input saja biar admin bebas
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'code' => $this->request->getPost('code'), // Pastikan kode unik
+            'price' => $this->request->getPost('price'),
+            'duration_days' => $this->request->getPost('duration'),
+            'description' => $this->request->getPost('description'),
+            'is_active' => 1 // Default aktif saat dibuat
+        ];
+
+        $visaModel->insert($data);
+
+        return redirect()->to('/dashboard/managementservice')->with('success', 'Layanan Visa baru berhasil ditambahkan!');
+    }
+
+    public function delete($id)
+    {
+        $visaModel = new VisaTypeModel();
+
+        // Hapus data berdasarkan ID
+        $visaModel->delete($id);
+
+        return redirect()->to('/dashboard/managementservice')->with('success', 'Layanan Visa berhasil dihapus.');
+    }
 }

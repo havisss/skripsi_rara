@@ -12,10 +12,20 @@ $routes->get('/', 'Home::index');
 
 
 
-// Route untuk menampilkan halaman formulir
-$routes->get('admin/login', 'LoginAdmin::index');           // Menampilkan halaman login
-$routes->post('admin/auth', 'LoginAdmin::Auth');
-$routes->get('admin/logout', 'LoginAdmin::logout');
+
+$routes->group('admin', function ($routes) {
+
+    // 1. Tampilkan Halaman Login (GET)
+    // Mengarah ke Controller LoginAdmin, fungsi index
+    $routes->get('login', 'LoginAdmin::index');
+
+    // 2. Proses Cek Password (POST)
+    // Mengarah ke Controller LoginAdmin, fungsi auth
+    $routes->post('auth', 'LoginAdmin::auth');
+
+    // 3. Logout
+    $routes->get('logout', 'LoginAdmin::logout');
+});
 
 $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 
@@ -26,13 +36,23 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
     $routes->get('managementorder', 'ManagementOrder::index');
     $routes->get('managementorder/detail/(:num)', 'ManagementOrder::detail/$1');
     $routes->post('managementorder/process', 'ManagementOrder::process');
-
     $routes->get('data', 'Data::index');
-
     $routes->get('managementservice', 'ManagementService::index');
     $routes->post('managementservice/update', 'ManagementService::update');
-
+    $routes->post('managementorder/process', 'ManagementOrder::process');
     $routes->get('transaksi', 'Transaksi::index');
+    $routes->post('transaksi/confirm', 'Transaksi::confirm'); // Untuk tombol konfirmasi
+    $routes->post('/managementservice/update', 'ManagementService::update');
+
+    // --- TAMBAHAN BARU ---
+    // Simpan Visa Baru
+    $routes->post('managementservice/save', 'ManagementService::save');
+    // Hapus Visa
+    $routes->get('managementservice/delete/(:num)', 'ManagementService::delete/$1');
+    $routes->post('managementorder/create', 'ManagementOrder::create'); // Simpan Order Manual
+    $routes->get('managementorder/export', 'ManagementOrder::export');  // Download CSV
+    $routes->post('data/add', 'Data::add');      // Proses Simpan Klien Baru
+    $routes->get('data/export', 'Data::export');
 });
 
 $routes->get('/logout', 'LoginAdmin::logout');
@@ -52,30 +72,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/booking/success/(:segment)', 'Booking::success/$1');
 });
 
-
-
-
-
-// --- TAMBAHKAN KODE DI BAWAH INI ---
-
-// Route utama Dashboard
-$routes->get('/dashboard', 'Dashboard::index');
-
-// Route untuk menu-menu di sidebar
-$routes->get('/dashboard/managementorder', 'ManagementOrder::index');
-$routes->get('/dashboard/data', 'Data::index');
-$routes->get('/dashboard/managementservice', 'ManagementService::index');
-$routes->get('/dashboard/managementorder/detail/(:num)', 'ManagementOrder::detail/$1');
-
-// 2. Proses Approval / Rejection (Action tombol)
-$routes->post('/dashboard/managementorder/process', 'ManagementOrder::process');
-
-$routes->get('/dashboard/transaksi', 'transaksi::index');
-// Route untuk Logout (sesuai link di sidebar view Anda)
-$routes->get('/logout', 'Dashboard::logout');
-
-// Proses Update Data Visa
-$routes->post('/dashboard/managementservice/update', 'ManagementService::update');
 
 
 

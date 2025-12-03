@@ -965,6 +965,9 @@ body {
 }
 
 .tab-btn {
+  text-decoration: none; /* Hilangkan garis bawah link */
+  display: inline-flex;
+  align-items: center;
   padding: 12px 20px;
   background: #fff;
   border: 2px solid #e9ecef;
