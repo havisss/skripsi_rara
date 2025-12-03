@@ -13,6 +13,29 @@ $routes->get('/', 'Home::index');
 
 
 // Route untuk menampilkan halaman formulir
+$routes->get('admin/login', 'LoginAdmin::index');           // Menampilkan halaman login
+$routes->post('admin/auth', 'LoginAdmin::Auth');
+$routes->get('admin/logout', 'LoginAdmin::logout');
+
+$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
+
+    // Semua route di dalam sini otomatis dicek login-nya
+
+    $routes->get('/', 'Dashboard::index'); // Mengakses /dashboard
+
+    $routes->get('managementorder', 'ManagementOrder::index');
+    $routes->get('managementorder/detail/(:num)', 'ManagementOrder::detail/$1');
+    $routes->post('managementorder/process', 'ManagementOrder::process');
+
+    $routes->get('data', 'Data::index');
+
+    $routes->get('managementservice', 'ManagementService::index');
+    $routes->post('managementservice/update', 'ManagementService::update');
+
+    $routes->get('transaksi', 'Transaksi::index');
+});
+
+$routes->get('/logout', 'LoginAdmin::logout');
 
 
 $routes->get('/login', 'Auth::index');           // Menampilkan halaman login
