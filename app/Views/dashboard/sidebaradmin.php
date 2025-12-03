@@ -47,28 +47,28 @@
                 <a href="<?= base_url('dashboard/managementorder') ?>"
                     class="<?= (uri_string() == 'dashboard/managementorder') ? 'active' : '' ?>">
                     <i class="fas fa-user"></i>
-                    <span>management order</span>
+                    <span>Management Order</span>
                 </a>
             </li>
             <li>
                 <a href="<?= base_url('dashboard/data') ?>"
                     class="<?= (uri_string() == 'dashboard/data') ? 'active' : '' ?>">
                     <i class="fas fa-folder"></i>
-                    <span>data klien</span>
+                    <span>Data Klien</span>
                 </a>
             </li>
             <li>
                 <a href="<?= base_url('dashboard/managementservice') ?>"
                     class="<?= (uri_string() == 'dashboard/managementservice') ? 'active' : '' ?>">
                     <i class="fas fa-bell"></i>
-                    <span>management service</span>
+                    <span>Management Service</span>
                 </a>
             </li>
             <li>
                 <a href="<?= base_url('dashboard/transaksi') ?>"
                     class="<?= (uri_string() == 'dashboard/transaksi') ? 'active' : '' ?>">
                     <i class="fas fa-envelope"></i>
-                    <span>transaksi</span>
+                    <span>Transaksi</span>
                 </a>
             </li>
             <div class="logout-btn">
