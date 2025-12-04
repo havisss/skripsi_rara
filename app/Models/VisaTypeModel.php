@@ -8,5 +8,14 @@ class VisaTypeModel extends Model
 {
     protected $table = 'visa_types';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'code', 'price', 'duration_days', 'description', 'is_active'];
+    protected $allowedFields = [
+        'name',
+        'code',
+        'price',
+        'duration_days',
+        'description',
+        'is_active',
+        'image_url',          // <--- Tambahan Baru
+        'regulation_content'  // <--- Tambahan Baru
+    ];
 }

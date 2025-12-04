@@ -10,7 +10,9 @@ use CodeIgniter\Router\RouteCollection;
 // Jika ingin halaman awal langsung ke Dashboard, gunakan yang ini:
 $routes->get('/', 'Home::index');
 
-
+// Route untuk Halaman Persyaratan & Artikel
+$routes->get('/persyaratan', 'Persyaratan::index');
+$routes->get('/persyaratan/detail/(:num)', 'Persyaratan::detail/$1');
 
 
 $routes->group('admin', function ($routes) {
@@ -53,6 +55,9 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
     $routes->get('managementorder/export', 'ManagementOrder::export');  // Download CSV
     $routes->post('data/add', 'Data::add');      // Proses Simpan Klien Baru
     $routes->get('data/export', 'Data::export');
+    $routes->post('managementservice/req/save', 'ManagementService::saveRequirement');
+    $routes->post('managementservice/req/update', 'ManagementService::updateRequirement');
+    $routes->get('managementservice/req/delete/(:num)', 'ManagementService::deleteRequirement/$1');
 });
 
 $routes->get('/logout', 'LoginAdmin::logout');
@@ -64,6 +69,8 @@ $routes->get('/register', 'Auth::register');            // Halaman form daftar
 $routes->post('/register/process', 'Auth::registerProcess');
 // Update route logout agar mengarah ke Controller Auth
 $routes->get('/logout', 'Auth::logout');
+
+
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/booking', 'Booking::index');
