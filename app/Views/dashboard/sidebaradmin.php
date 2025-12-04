@@ -14,6 +14,11 @@
 
 </head>
 
+
+<style>
+
+</style>
+
 <body>
     <!-- NAVBAR -->
     <nav class="navbar">

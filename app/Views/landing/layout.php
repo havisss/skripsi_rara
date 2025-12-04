@@ -75,6 +75,7 @@
         <div class="logo">Bali Fantastic</div>
         <ul class="nav-menu" id="navMenu">
             <li><a href="#home">Home</a></li>
+
             <li><a href="#layanan">Layanan</a></li>
 
             <?php if (session()->get('isLoggedIn')): ?>
@@ -84,6 +85,10 @@
             <?php else: ?>
             <li><a href="<?= base_url('login?tujuan=landing') ?>">Cek Status</a></li>
             <?php endif; ?>
+
+            <li><a href="persyaratan">Persyaratan</a></li>
+            <li><a href="#proses">Proses</a></li>
+
             <li><a href="#testimoni">Testimoni</a></li>
 
             <li><a href="<?= base_url('booking') ?>" class="cta-button">Apply Visa</a></li>
