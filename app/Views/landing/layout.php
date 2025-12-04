@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bali Fantastic - Agency Visa Terpercaya Indonesia</title>
-    <link rel="stylesheet" href="assets/css/landing/main.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/landing/main.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -16,7 +16,7 @@
         <div class="logo">Bali Fantastic</div>
         <ul class="nav-menu" id="navMenu">
             <li><a href="#home">Home</a></li>
-            <li><a href="#layanan">Layanan</a></li>
+            <li><a href="persyaratan">Persyaratan</a></li>
             <li><a href="#proses">Proses</a></li>
             <li><a href="#testimoni">Testimoni</a></li>
             <li><a href="#kontak" class="cta-button">Konsultasi Gratis</a></li>
