@@ -9,10 +9,18 @@ class Auth extends BaseController
 {
     public function index()
     {
-        // Jika sudah login, lempar ke dashboard
+        // Jika sudah login, lempar ke dashboard atau booking sesuai role (default logic)
         if (session()->get('isLoggedIn')) {
             return redirect()->to('/dashboard');
         }
+
+        // --- [MODIFIKASI JONO START] ---
+        // Menangkap parameter 'tujuan' dari URL (misal: /login?tujuan=landing)
+        // Ini digunakan agar setelah login, user dikembalikan ke halaman depan untuk buka profil
+        if ($this->request->getGet('tujuan')) {
+            session()->set('redirect_url', $this->request->getGet('tujuan'));
+        }
+        // --- [MODIFIKASI JONO END] ---
 
         return view('auth/login');
     }
@@ -41,7 +49,23 @@ class Auth extends BaseController
                     'isLoggedIn' => TRUE
                 ];
                 $session->set($ses_data);
-                return redirect()->to('/booking');
+
+                // --- [MODIFIKASI JONO START] ---
+                // Cek apakah ada instruksi redirect khusus di session?
+                $redirectUrl = session()->get('redirect_url');
+
+                if ($redirectUrl == 'landing') {
+                    // Hapus session agar tidak tersimpan terus menerus
+                    session()->remove('redirect_url');
+                    
+                    // Redirect ke Landing Page (Home) agar Sidebar Profil bisa dibuka
+                    return redirect()->to('/'); 
+                } else {
+                    // Default behavior (Sesuai kode teman Bos: Lempar ke Booking)
+                    return redirect()->to('/booking');
+                }
+                // --- [MODIFIKASI JONO END] ---
+
             } else {
                 $session->setFlashdata('msg', 'Password salah.');
                 return redirect()->to('/login');
@@ -66,7 +90,6 @@ class Auth extends BaseController
 
     public function registerProcess()
     {
-        // PERBAIKAN: Gunakan kurung siku [] bukan kurung biasa ()
         $rules = [
             'full_name'     => 'required|min_length[3]|max_length[100]',
             'email'         => 'required|min_length[6]|max_length[100]|valid_email|is_unique[users.email]',
@@ -84,7 +107,7 @@ class Auth extends BaseController
                 // Hash password sebelum disimpan
                 'password_hash' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
 
-                // Field optional (bisa dikosongkan jika user belum mau isi)
+                // Field optional
                 'nationality'   => $this->request->getVar('nationality'),
                 'passport_number' => $this->request->getVar('passport_number'),
             ];
@@ -105,6 +128,6 @@ class Auth extends BaseController
     {
         $session = session();
         $session->destroy();
-        return redirect()->to('/login');
+        return redirect()->to('/');
     }
 }
