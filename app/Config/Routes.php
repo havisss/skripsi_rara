@@ -9,7 +9,14 @@ use CodeIgniter\Router\RouteCollection;
 // Route Halaman Depan
 $routes->get('/', 'Home::index');
 
+
 // GROUP: ADMIN ROUTES
+
+// Route untuk Halaman Persyaratan & Artikel
+$routes->get('/persyaratan', 'Persyaratan::index');
+$routes->get('/persyaratan/detail/(:num)', 'Persyaratan::detail/$1');
+
+
 $routes->group('admin', function ($routes) {
     // 1. Tampilkan Halaman Login (GET)
     $routes->get('login', 'LoginAdmin::index');
@@ -35,6 +42,11 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
     $routes->post('data/add', 'Data::add');      // Proses Simpan Klien Baru
     $routes->get('data/export', 'Data::export');
 
+    $routes->post('managementservice/req/save', 'ManagementService::saveRequirement');
+    $routes->post('managementservice/req/update', 'ManagementService::updateRequirement');
+    $routes->get('managementservice/req/delete/(:num)', 'ManagementService::deleteRequirement/$1');
+});
+
     // Management Service (Visa)
     $routes->get('managementservice', 'ManagementService::index');
     $routes->post('managementservice/update', 'ManagementService::update');
@@ -53,7 +65,7 @@ $routes->get('/register', 'Auth::register');            // Halaman form daftar
 $routes->post('/register/process', 'Auth::registerProcess');
 $routes->get('/logout', 'Auth::logout');
 
-// GROUP: USER (LOGIN REQUIRED)
+
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ... route booking yang lama ...
     $routes->get('/booking', 'Booking::index');
