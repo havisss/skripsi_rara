@@ -69,18 +69,18 @@
 
                     <!-- Error Message (from backend) -->
                     <?php if (session()->getFlashdata('error')): ?>
-                        <div class="alert alert-error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span><?= session()->getFlashdata('error') ?></span>
-                        </div>
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span><?= session()->getFlashdata('error') ?></span>
+                    </div>
                     <?php endif; ?>
 
                     <!-- Success Message (from backend) -->
                     <?php if (session()->getFlashdata('success')): ?>
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle"></i>
-                            <span><?= session()->getFlashdata('success') ?></span>
-                        </div>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><?= session()->getFlashdata('success') ?></span>
+                    </div>
                     <?php endif; ?>
 
                     <!-- Submit Button -->
@@ -103,9 +103,7 @@
         <!-- RIGHT SIDE - BACKGROUND IMAGE -->
         <div class="login-right">
             <!-- 
-                GANTI IMAGE DI SINI:
-                Taruh file image di: assets/img/login-bg.jpg
-                Atau ganti path sesuai kebutuhan
+               Taruh file image di: assets/img/login-bg.jpg
             -->
             <div class="login-bg-overlay"></div>
             <div class="login-bg-content">
@@ -122,86 +120,86 @@
 
     <!-- JavaScript -->
     <script>
-        // Toggle Password Visibility
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eyeIcon');
+    // Toggle Password Visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
 
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
 
-            // Toggle eye icon
-            if (type === 'password') {
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            } else {
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            }
-        });
+        // Toggle eye icon
+        if (type === 'password') {
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        } else {
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        }
+    });
 
-        // Form Validation
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const emailError = document.getElementById('emailError');
-        const passwordError = document.getElementById('passwordError');
-        const btnLogin = document.getElementById('btnLogin');
+    // Form Validation
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const btnLogin = document.getElementById('btnLogin');
 
-        loginForm.addEventListener('submit', function(e) {
-            let isValid = true;
+    loginForm.addEventListener('submit', function(e) {
+        let isValid = true;
 
-            // Reset errors
-            emailError.textContent = '';
-            passwordError.textContent = '';
-            emailInput.classList.remove('input-invalid');
-            passwordInput.classList.remove('input-invalid');
+        // Reset errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        emailInput.classList.remove('input-invalid');
+        passwordInput.classList.remove('input-invalid');
 
-            // Validate email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value)) {
-                emailError.textContent = 'Please enter a valid email address';
-                emailInput.classList.add('input-invalid');
-                isValid = false;
-            }
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value)) {
+            emailError.textContent = 'Please enter a valid email address';
+            emailInput.classList.add('input-invalid');
+            isValid = false;
+        }
 
-            // Validate password
-            if (passwordInput.value.length < 6) {
-                passwordError.textContent = 'Password must be at least 6 characters';
-                passwordInput.classList.add('input-invalid');
-                isValid = false;
-            }
+        // Validate password
+        if (passwordInput.value.length < 6) {
+            passwordError.textContent = 'Password must be at least 6 characters';
+            passwordInput.classList.add('input-invalid');
+            isValid = false;
+        }
 
-            if (!isValid) {
-                e.preventDefault();
-                return false;
-            }
+        if (!isValid) {
+            e.preventDefault();
+            return false;
+        }
 
-            // Show loading state
-            btnLogin.disabled = true;
-            btnLogin.innerHTML =
-                '<span class="btn-text">Loading...</span><i class="fas fa-spinner fa-spin btn-icon"></i>';
-        });
+        // Show loading state
+        btnLogin.disabled = true;
+        btnLogin.innerHTML =
+            '<span class="btn-text">Loading...</span><i class="fas fa-spinner fa-spin btn-icon"></i>';
+    });
 
-        // Clear error on input
-        emailInput.addEventListener('input', function() {
-            emailError.textContent = '';
-            emailInput.classList.remove('input-invalid');
-        });
+    // Clear error on input
+    emailInput.addEventListener('input', function() {
+        emailError.textContent = '';
+        emailInput.classList.remove('input-invalid');
+    });
 
-        passwordInput.addEventListener('input', function() {
-            passwordError.textContent = '';
-            passwordInput.classList.remove('input-invalid');
-        });
+    passwordInput.addEventListener('input', function() {
+        passwordError.textContent = '';
+        passwordInput.classList.remove('input-invalid');
+    });
 
-        // Auto-hide alerts after 5 seconds
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            setTimeout(() => {
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 300);
-            }, 5000);
-        });
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
     </script>
 </body>
 
