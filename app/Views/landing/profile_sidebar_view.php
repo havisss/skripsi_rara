@@ -123,6 +123,7 @@
     margin-bottom: 20px;
 }
 
+/* WARNA STATUS */
 .status-pending {
     background: #fff7ed;
     color: #ea580c;
@@ -145,6 +146,43 @@
     background: #fef2f2;
     color: #dc2626;
     border: 1px solid #fecaca;
+}
+
+/* [NEW] STYLE KHUSUS REVISI */
+.status-revision {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fda4af;
+}
+
+.revision-box {
+    background: #fff5f5;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+    /* Efek Berdenyut */
+}
+
+.revision-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #be123c;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.revision-note {
+    font-size: 0.85rem;
+    color: #333;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
 }
 
 /* TIMELINE */
@@ -180,6 +218,12 @@
     background: #16a34a;
 }
 
+/* Timeline Warning untuk Revisi */
+.profile-sidebar .timeline-item.warning::before {
+    background: #be123c;
+    box-shadow: 0 0 0 4px rgba(190, 18, 60, 0.2);
+}
+
 .profile-sidebar .timeline-title {
     font-weight: 600;
     font-size: 0.95rem;
@@ -199,7 +243,6 @@
     margin-top: 25px;
 }
 
-/* Tombol Bayar (Kuning/Emas) */
 .profile-sidebar .btn-pay {
     display: block;
     width: 100%;
@@ -219,7 +262,6 @@
     transform: translateY(-2px);
 }
 
-/* Tombol Upload (Biru) */
 .profile-sidebar .btn-upload {
     display: block;
     width: 100%;
@@ -237,6 +279,25 @@
 .profile-sidebar .btn-upload:hover {
     background: #1d4ed8;
     transform: translateY(-2px);
+}
+
+/* Tombol WA Revisi */
+.profile-sidebar .btn-wa-revision {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #dc2626;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.profile-sidebar .btn-wa-revision:hover {
+    background: #b91c1c;
 }
 
 .profile-sidebar .alert-box {
@@ -288,6 +349,21 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+/* ANIMASI DENYUT */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
 </style>
 
 <div class="sidebar-header">
@@ -315,9 +391,19 @@
             <?php
                     $s = $latest_app['status'];
                     $badgeClass = 'status-process'; $statusText = 'Diproses';
-                    if (in_array($s, ['payment_pending', 'upload_pending'])) { $badgeClass = 'status-pending'; $statusText = 'MENUNGGU USER'; }
-                    elseif ($s == 'approved') { $badgeClass = 'status-approved'; $statusText = 'DISETUJUI'; }
-                    elseif ($s == 'rejected') { $badgeClass = 'status-rejected'; $statusText = 'DITOLAK'; }
+                    
+                    if (in_array($s, ['payment_pending', 'upload_pending'])) { 
+                        $badgeClass = 'status-pending'; $statusText = 'MENUNGGU USER'; 
+                    }
+                    elseif ($s == 'approved') { 
+                        $badgeClass = 'status-approved'; $statusText = 'DISETUJUI'; 
+                    }
+                    elseif ($s == 'rejected') { 
+                        $badgeClass = 'status-rejected'; $statusText = 'DITOLAK'; 
+                    }
+                    elseif ($s == 'revision_needed') { 
+                        $badgeClass = 'status-revision'; $statusText = 'PERLU REVISI'; 
+                    }
                 ?>
             <span class="status-badge <?= $badgeClass ?>"><?= $statusText ?></span>
 
@@ -331,8 +417,12 @@
                     <div class="timeline-title">Dokumen</div>
                     <div class="timeline-desc"><?= $uploaded_docs_count ?> terupload</div>
                 </div>
-                <div class="timeline-item <?= ($s == 'verification_process' || $s == 'approved') ? 'active' : '' ?>">
+                <div
+                    class="timeline-item <?= ($s == 'revision_needed') ? 'warning' : (($s == 'verification_process' || $s == 'approved') ? 'active' : '') ?>">
                     <div class="timeline-title">Verifikasi Admin</div>
+                    <?php if($s == 'revision_needed'): ?>
+                    <div class="timeline-desc" style="color: #be123c;">Dokumen ditolak/perlu revisi</div>
+                    <?php endif; ?>
                 </div>
                 <div class="timeline-item <?= ($s == 'approved') ? 'done' : '' ?>">
                     <div class="timeline-title">Selesai</div>
@@ -341,13 +431,34 @@
 
             <div class="action-area">
 
+                <?php if ($s == 'revision_needed'): ?>
+                <div class="revision-box">
+                    <div class="revision-header">
+                        <i class="fa-solid fa-triangle-exclamation"></i> PERHATIAN: Revisi Diperlukan
+                    </div>
+                    <div class="revision-note">
+                        "<?= esc($latest_app['admin_note'] ?? 'Mohon cek kelengkapan dokumen Anda dan hubungi admin.') ?>"
+                    </div>
+
+                    <?php
+                            // Link WA Otomatis untuk Revisi
+                            $waNumber = '6281188090025'; // Ganti dengan nomor Admin
+                            $waMsg = "Halo Admin, saya ingin melakukan revisi dokumen untuk Invoice #" . $latest_app['invoice_number'] . ". Mohon panduannya.";
+                            $waLink = "https://wa.me/{$waNumber}?text=" . urlencode($waMsg);
+                        ?>
+
+                    <a href="<?= $waLink ?>" target="_blank" class="btn-wa-revision">
+                        <i class="fa-brands fa-whatsapp"></i> Hubungi Admin untuk Revisi
+                    </a>
+                </div>
+                <?php endif; ?>
                 <?php if ($latest_app['payment_status'] == 'unpaid'): ?>
                 <a href="<?= base_url('booking/success/' . $latest_app['invoice_number']) ?>" class="btn-pay">
                     <i class="fa-solid fa-money-bill-wave"></i> Bayar Tagihan Sekarang
                 </a>
                 <?php endif; ?>
 
-                <?php if (!empty($missing_docs)): ?>
+                <?php if (!empty($missing_docs) && $s != 'revision_needed'): ?>
                 <div class="alert-box">
                     <div style="font-weight:bold; color:#be123c; font-size:0.9rem; margin-bottom:5px;">
                         <i class="fa-solid fa-circle-exclamation"></i> Dokumen Kurang:
