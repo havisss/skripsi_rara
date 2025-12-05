@@ -314,4 +314,30 @@
         </div>
     </div>
 </section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Ambil semua elemen tombol menu dan isi konten
+    const menuItems = document.querySelectorAll('.menu-item');
+    const detailContents = document.querySelectorAll('.detail-content');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 1. Reset: Hapus class 'active' dari semua tombol & konten lama
+            menuItems.forEach(i => i.classList.remove('active'));
+            detailContents.forEach(c => c.classList.remove('active'));
+
+            // 2. Set Aktif: Tambahkan class 'active' ke tombol yang baru diklik
+            this.classList.add('active');
+
+            // 3. Pindah Konten: Cari konten yang sesuai dengan ID target
+            const targetId = this.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+});
+</script>
 <?= $this->endSection() ?>
