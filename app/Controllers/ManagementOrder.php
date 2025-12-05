@@ -4,6 +4,10 @@ namespace App\Controllers;
 
 use App\Models\ApplicationModel;
 use App\Models\VisaTypeModel;
+use App\Models\ApplicationDocumentModel;
+use App\Models\UserModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ManagementOrder extends BaseController
 {
@@ -12,102 +16,168 @@ class ManagementOrder extends BaseController
         helper('url');
         $appModel = new ApplicationModel();
         $visaModel = new VisaTypeModel();
-        $db = \Config\Database::connect(); // Load Database Helper
+        $db = \Config\Database::connect();
 
-        // --- 1. SIAPKAN QUERY UNTUK TABEL UTAMA ---
+        // 1. QUERY UTAMA
         $builder = $appModel->select('applications.*, users.full_name, users.email, visa_types.name as visa_name, visa_types.code as visa_code')
             ->join('users', 'users.id = applications.user_id')
-            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left'); // Tambah 'left'
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left');
 
-        // ... (LOGIKA FILTER LAINNYA BIARKAN TETAP SAMA SEPERTI SEBELUMNYA) ...
-
-        // Filter Status dari URL (agar tabel berubah saat tab diklik)
+        // 2. FILTERING
         $statusFilter = $this->request->getGet('status');
         if ($statusFilter && $statusFilter != 'all') {
             if ($statusFilter == 'pending_group') {
-                // Tab "Menunggu Verifikasi" mencakup 3 status
                 $builder->whereIn('applications.status', ['payment_pending', 'upload_pending', 'verification_process']);
             } elseif ($statusFilter == 'action_needed') {
-                // Tab "Perlu Tindakan"
                 $builder->whereIn('applications.status', ['revision_needed', 'rejected']);
             } elseif ($statusFilter == 'urgent') {
-                // Tab "Urgent" (Misal: yang sudah bayar tapi belum upload)
                 $builder->where('applications.status', 'upload_pending');
             } else {
                 $builder->where('applications.status', $statusFilter);
             }
         }
 
+        $keyword = $this->request->getGet('keyword');
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('users.full_name', $keyword)
+                ->orLike('applications.invoice_number', $keyword)
+                ->groupEnd();
+        }
+
+        $visa = $this->request->getGet('visa');
+        if ($visa) {
+            $builder->where('visa_types.code', $visa);
+        }
+
+        $date = $this->request->getGet('date');
+        if ($date) {
+            $builder->like('applications.created_at', $date);
+        }
+
         $builder->orderBy('applications.created_at', 'DESC');
 
+        // 3. AMBIL DATA
         $data['orders'] = $appModel->paginate(10, 'orders');
         $data['pager'] = $appModel->pager;
         $data['visa_types'] = $visaModel->findAll();
 
-        // --- 2. HITUNG STATISTIK REALTIME (INI YANG PENTING) ---
-        // Kita hitung terpisah agar angkanya tidak ikut terfilter
-
-        // A. Total Semua Data
+        // 4. STATISTIK COUNTER
         $data['count_all'] = $db->table('applications')->countAllResults();
-
-        // B. Menunggu Verifikasi (Pending Payment, Upload, atau Verifikasi)
+        
         $data['count_pending'] = $db->table('applications')
             ->whereIn('status', ['payment_pending', 'upload_pending', 'verification_process'])
             ->countAllResults();
 
-        // C. Perlu Tindakan (Revisi atau Ditolak)
         $data['count_action'] = $db->table('applications')
             ->whereIn('status', ['revision_needed', 'rejected'])
             ->countAllResults();
 
-        // D. Urgent (Misal: Status Upload Pending)
         $data['count_urgent'] = $db->table('applications')
             ->where('status', 'upload_pending')
             ->countAllResults();
 
-        // Simpan filter agar view tahu tab mana yang aktif
         $data['active_tab'] = $statusFilter ?? 'all';
-
-        // Filter search bar dll
         $data['filters'] = [
-            'keyword' => $this->request->getGet('keyword'),
-            'visa' => $this->request->getGet('visa'),
+            'keyword' => $keyword,
+            'visa' => $visa,
             'status' => $statusFilter,
-            'date' => $this->request->getGet('date')
+            'date' => $date
         ];
 
         return view('dashboard/managementorder', $data);
     }
-    // --- METHOD TAMBAH ORDER MANUAL ---
+
+    // --- FITUR DETAIL ORDER (INI YANG TADI ERROR) ---
+    public function detail($id)
+    {
+        $appModel = new ApplicationModel();
+        $docModel = new ApplicationDocumentModel();
+        
+        // A. Ambil Data Lengkap (User + Visa)
+        $order = $appModel->select('applications.*, users.full_name, users.email, users.phone_number, users.nationality, visa_types.name as visa_name, visa_types.price')
+            ->join('users', 'users.id = applications.user_id')
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left')
+            ->where('applications.id', $id)
+            ->first();
+
+        // Cek jika data tidak ditemukan
+        if (!$order) {
+            return redirect()->to('/dashboard/managementorder')->with('error', 'Data order tidak ditemukan!');
+        }
+
+        // B. Ambil Dokumen
+        $documents = $docModel->select('application_documents.*, visa_requirements.document_name')
+            ->join('visa_requirements', 'visa_requirements.id = application_documents.requirement_id')
+            ->where('application_documents.application_id', $id)
+            ->findAll();
+
+        // C. Bungkus Data untuk View
+        $data = [
+            'order' => $order,        // <-- INI VARIABEL $order YANG DICARI VIEW
+            'documents' => $documents // <-- INI VARIABEL $documents
+        ];
+
+        // Pastikan nama view ini SAMA PERSIS dengan nama file view Bos
+        return view('dashboard/order_detail', $data);
+    }
+
+    // --- PROSES VERIFIKASI ---
+    public function process()
+    {
+        $appModel = new ApplicationModel();
+        
+        $id = $this->request->getPost('id');
+        $action = $this->request->getPost('action'); 
+        $note = $this->request->getPost('admin_note'); 
+
+        $status = 'pending';
+        
+        if ($action == 'approve') {
+            $status = 'approved';
+        } elseif ($action == 'revision') {
+            $status = 'revision_needed';
+        } elseif ($action == 'reject') {
+            $status = 'rejected';
+        }
+
+        // Simpan ke Database
+        $appModel->update($id, [
+            'status' => $status,
+            'admin_note' => $note 
+        ]);
+
+        $msg = ($action == 'approve') ? 'Visa berhasil disetujui!' : 'Status berhasil diperbarui.';
+        return redirect()->to('/dashboard/managementorder/detail/' . $id)->with('success', $msg);
+    }
+
+    // --- CREATE MANUAL ---
     public function create()
     {
-        $userModel = new \App\Models\UserModel();
-        $appModel = new \App\Models\ApplicationModel();
+        $userModel = new UserModel();
+        $appModel = new ApplicationModel();
 
-        // 1. Cek User: Apakah Email sudah ada?
         $email = $this->request->getPost('email');
         $user = $userModel->where('email', $email)->first();
 
         if ($user) {
             $userId = $user['id'];
         } else {
-            // Jika User Belum Ada, Buat User Baru Otomatis
             $newUser = [
                 'full_name' => $this->request->getPost('full_name'),
                 'email' => $email,
                 'phone_number' => $this->request->getPost('phone_number'),
-                'password_hash' => password_hash('123456', PASSWORD_DEFAULT), // Password default
+                'password_hash' => password_hash('123456', PASSWORD_DEFAULT),
                 'nationality' => 'Unknown',
             ];
             $userId = $userModel->insert($newUser);
         }
 
-        // 2. Buat Order (Application)
         $data = [
             'invoice_number' => 'INV-' . strtoupper(uniqid()),
             'user_id' => $userId,
             'visa_type_id' => $this->request->getPost('visa_type_id'),
-            'status' => 'payment_pending', // Default status awal
+            'status' => 'payment_pending',
             'payment_status' => 'unpaid',
             'submission_date' => date('Y-m-d H:i:s')
         ];
@@ -117,22 +187,16 @@ class ManagementOrder extends BaseController
         return redirect()->to('/dashboard/managementorder')->with('success', 'Order manual berhasil dibuat!');
     }
 
-    // --- METHOD EXPORT DATA (CSV) ---
-    // Jangan lupa tambahkan ini di paling atas file (setelah namespace)
-    // use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    // use PhpOffice\PhpSpreadsheet\Style\Alignment;
-
+    // --- EXPORT EXCEL ---
     public function export()
     {
-        $appModel = new \App\Models\ApplicationModel();
+        $appModel = new ApplicationModel();
 
-        // --- 1. DEFINISI ULANG $BUILDER (Ini yang tadi kurang) ---
         $builder = $appModel->select('applications.*, users.full_name, users.email, users.phone_number, visa_types.name as visa_name')
             ->join('users', 'users.id = applications.user_id')
             ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left');
 
-        // --- 2. TERAPKAN FILTER (Copy dari Index) ---
+        // Filter Export Sama dengan Index
         $keyword = $this->request->getGet('keyword');
         if ($keyword) {
             $builder->groupStart()
@@ -140,29 +204,20 @@ class ManagementOrder extends BaseController
                 ->orLike('applications.invoice_number', $keyword)
                 ->groupEnd();
         }
-
         $visaFilter = $this->request->getGet('visa');
         if ($visaFilter) {
             $builder->where('visa_types.code', $visaFilter);
         }
-
         $statusFilter = $this->request->getGet('status');
         if ($statusFilter && $statusFilter != 'all') {
             $builder->where('applications.status', $statusFilter);
         }
 
-        // --- 3. AMBIL DATA ---
         $data = $builder->orderBy('applications.created_at', 'DESC')->findAll();
 
-        // --- 4. EXPORT KE EXCEL (Pake Library yang sudah diinstall) ---
-        // Pastikan Anda sudah menambahkan baris ini di PALING ATAS file controller:
-        // use PhpOffice\PhpSpreadsheet\Spreadsheet;
-        // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set Header
         $headers = ['Invoice ID', 'Tanggal', 'Nama Klien', 'Email', 'No HP', 'Jenis Visa', 'Status Proses', 'Status Bayar'];
         $col = 'A';
         foreach ($headers as $h) {
@@ -172,7 +227,6 @@ class ManagementOrder extends BaseController
             $col++;
         }
 
-        // Isi Data
         $rowNum = 2;
         foreach ($data as $row) {
             $sheet->setCellValue('A' . $rowNum, $row['invoice_number']);
@@ -186,72 +240,13 @@ class ManagementOrder extends BaseController
             $rowNum++;
         }
 
-        // Download
         $filename = 'Laporan_Order_' . date('Y-m-d') . '.xlsx';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
 
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
         exit;
-    }
-    // --- METHOD DETAIL ORDER (View Dokumen & Info) ---
-    public function detail($id)
-    {
-        $appModel = new ApplicationModel();
-        $db = \Config\Database::connect();
-
-        // 1. Ambil Data Aplikasi (Logic ini sudah benar)
-        $app = $appModel->select('applications.*, users.full_name, users.email, users.phone_number, visa_types.name as visa_name')
-            ->join('users', 'users.id = applications.user_id')
-            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left')
-            ->where('applications.id', $id)
-            ->first();
-
-        if (!$app) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Order dengan ID $id tidak ditemukan.");
-        }
-
-        // 2. PERBAIKAN DI SINI: Join ke tabel visa_requirements
-        $documents = $db->table('application_documents')
-            ->select('application_documents.*, visa_requirements.document_name') // Ambil nama dokumen
-            ->join('visa_requirements', 'visa_requirements.id = application_documents.requirement_id', 'left') // Hubungkan tabel
-            ->where('application_documents.application_id', $id)
-            ->get()
-            ->getResultArray();
-
-        $data = [
-            'app' => $app,
-            'documents' => $documents
-        ];
-
-        return view('dashboard/order_detail', $data);
-    }
-
-    // --- METHOD PROSES (Approve/Reject) ---
-    // Diperlukan karena di view order_detail.php ada form action ke method ini
-    public function process()
-    {
-        $appModel = new ApplicationModel();
-        $id = $this->request->getPost('application_id');
-        $action = $this->request->getPost('action'); // value: 'approve' atau 'reject'
-
-        if (!$id || !$action) {
-            return redirect()->back()->with('error', 'Data tidak valid.');
-        }
-
-        // Tentukan Status Baru
-        $newStatus = ($action === 'approve') ? 'approved' : 'rejected';
-
-        // Update Database
-        $appModel->update($id, [
-            'status' => $newStatus,
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $message = ($action === 'approve') ? 'Permohonan berhasil disetujui.' : 'Permohonan ditolak.';
-
-        return redirect()->to('/dashboard/managementorder')->with('success', $message);
     }
 }
