@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bali Fantastic - Agency Visa Terpercaya Indonesia</title>
-    <link rel="stylesheet" href="assets/css/landing/main.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/landing/main.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
@@ -74,7 +74,7 @@
     <nav class="navbar" id="navbar">
         <div class="logo">Bali Fantastic</div>
         <ul class="nav-menu" id="navMenu">
-            <li><a href="#home">Home</a></li>
+            <li><a href="/">Home</a></li>
 
             <li><a href="#layanan">Layanan</a></li>
 
@@ -194,6 +194,84 @@
         if (btnElement) btnElement.classList.add('active');
     }
     </script>
+    <script>
+    // Script Animasi Scroll untuk Section Process
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.step');
+
+        // Cek apakah browser mendukung IntersectionObserver (Fitur modern)
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Stop pantau setelah muncul
+                    }
+                });
+            }, {
+                threshold: 0.1 // Muncul saat 10% elemen terlihat
+            });
+
+            steps.forEach(step => {
+                observer.observe(step);
+            });
+        } else {
+            // Fallback untuk browser jadul: Langsung munculkan semua
+            steps.forEach(step => {
+                step.classList.add('visible');
+            });
+        }
+    });
+    </script>
 </body>
+<footer class="footer">
+    <div class="footer-content">
+
+        <div class="footer-section footer-about">
+            <div class="footer-logo">Bali Fantastic</div>
+            <p class="footer-tagline">Partner Visa Terpercaya Anda</p>
+            <p class="footer-details">
+                Solusi pengurusan visa Indonesia yang cepat, transparan, dan profesional. Nikmati perjalanan tanpa
+                hambatan birokrasi bersama kami.
+            </p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" class="social-link"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section footer-links">
+            <h3>Menu Utama</h3>
+            <a href="#home">Beranda</a>
+            <a href="#layanan">Katalog Visa</a>
+            <a href="#proses">Alur Proses</a>
+            <a href="#testimoni">Testimoni Klien</a>
+        </div>
+
+        <div class="footer-section footer-links">
+            <h3>Akses Member</h3>
+            <a href="<?= base_url('login') ?>">Login / Cek Status</a>
+            <a href="<?= base_url('register') ?>">Daftar Akun Baru</a>
+            <a href="#">Syarat & Ketentuan</a>
+            <a href="#">Kebijakan Privasi</a>
+        </div>
+
+        <div class="footer-section footer-contact">
+            <h3>Hubungi Kami</h3>
+            <p><i class="fa-solid fa-location-dot"></i> &nbsp; Jl. Sunset Road No. 88, Kuta, Bali</p>
+            <p><i class="fa-solid fa-phone"></i> &nbsp; +62 811-8809-0025</p>
+            <p><i class="fa-solid fa-envelope"></i> &nbsp; hello@balifantastic.id</p>
+            <p><i class="fa-solid fa-clock"></i> &nbsp; Senin - Jumat, 09:00 - 17:00</p>
+        </div>
+    </div>
+
+    <hr class="footer-hr">
+
+    <div class="footer-bottom">
+        <p class="copyright">© 2025 - Bali Fantastic Visas Indonesia. All Rights Reserved.</p>
+    </div>
+</footer>
 
 </html>
