@@ -621,14 +621,7 @@ a {
 .cta-section {
   position: relative; /* Penting untuk overlay */
   padding: 100px 5%;
-  
-  /* Setting Background Biar Rapi */
-  background-image: url("../../assets/logo-sosmed/footer.webp"); /* Pastikan path ini benar */
-  background-size: cover;     /* Gambar memenuhi kotak */
-  background-position: center; /* Gambar di tengah */
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* OPSI KEREN: Efek Parallax (Gambar diam saat discroll) */
-  
+
   text-align: center;
   color: #fff;
   overflow: hidden;
@@ -663,9 +656,9 @@ a {
 }
 
 /* =========================================
-   9. BOOKING FORM SPECIFIC (NEW)
-   Renamed .container to .booking-container to avoid conflict
-   ========================================= */
+  9. BOOKING FORM SPECIFIC (NEW)
+  Renamed .container to .booking-container to avoid conflict
+  ========================================= */
 .booking-container {
   max-width: 800px;
   margin: 50px auto;
@@ -793,7 +786,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("assets/bgfooter.PNG");
+  background-image: url("../../footer.webp");
   background-size: 80px;
   background-position: center;
   opacity: 0.1;

@@ -196,4 +196,62 @@ class ManagementOrder extends BaseController
         $writer->save('php://output');
         exit;
     }
+    // --- METHOD DETAIL ORDER (View Dokumen & Info) ---
+    public function detail($id)
+    {
+        $appModel = new ApplicationModel();
+        $db = \Config\Database::connect();
+
+        // 1. Ambil Data Aplikasi (Logic ini sudah benar)
+        $app = $appModel->select('applications.*, users.full_name, users.email, users.phone_number, visa_types.name as visa_name')
+            ->join('users', 'users.id = applications.user_id')
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left')
+            ->where('applications.id', $id)
+            ->first();
+
+        if (!$app) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Order dengan ID $id tidak ditemukan.");
+        }
+
+        // 2. PERBAIKAN DI SINI: Join ke tabel visa_requirements
+        $documents = $db->table('application_documents')
+            ->select('application_documents.*, visa_requirements.document_name') // Ambil nama dokumen
+            ->join('visa_requirements', 'visa_requirements.id = application_documents.requirement_id', 'left') // Hubungkan tabel
+            ->where('application_documents.application_id', $id)
+            ->get()
+            ->getResultArray();
+
+        $data = [
+            'app' => $app,
+            'documents' => $documents
+        ];
+
+        return view('dashboard/order_detail', $data);
+    }
+
+    // --- METHOD PROSES (Approve/Reject) ---
+    // Diperlukan karena di view order_detail.php ada form action ke method ini
+    public function process()
+    {
+        $appModel = new ApplicationModel();
+        $id = $this->request->getPost('application_id');
+        $action = $this->request->getPost('action'); // value: 'approve' atau 'reject'
+
+        if (!$id || !$action) {
+            return redirect()->back()->with('error', 'Data tidak valid.');
+        }
+
+        // Tentukan Status Baru
+        $newStatus = ($action === 'approve') ? 'approved' : 'rejected';
+
+        // Update Database
+        $appModel->update($id, [
+            'status' => $newStatus,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $message = ($action === 'approve') ? 'Permohonan berhasil disetujui.' : 'Permohonan ditolak.';
+
+        return redirect()->to('/dashboard/managementorder')->with('success', $message);
+    }
 }
