@@ -45,7 +45,7 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
     $routes->post('managementservice/req/save', 'ManagementService::saveRequirement');
     $routes->post('managementservice/req/update', 'ManagementService::updateRequirement');
     $routes->get('managementservice/req/delete/(:num)', 'ManagementService::deleteRequirement/$1');
-});
+
 
     // Management Service (Visa)
     $routes->get('managementservice', 'ManagementService::index');
@@ -55,7 +55,7 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 
     // Transaksi
     $routes->get('transaksi', 'Transaksi::index');
-    $routes->post('transaksi/confirm', 'Transaksi::confirm'); 
+    $routes->post('transaksi/confirm', 'Transaksi::confirm');
 });
 
 // AUTH PUBLIC ROUTES
@@ -74,7 +74,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Route Sidebar & Profil
     $routes->get('/myprofile/fetch', 'MyProfile::fetchSidebar');
-    
+
     // [BARU] Route untuk Proses Update Profil
-    $routes->post('/myprofile/update', 'MyProfile::update'); 
+    $routes->post('/myprofile/update', 'MyProfile::update');
 });
