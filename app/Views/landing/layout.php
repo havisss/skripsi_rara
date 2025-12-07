@@ -79,9 +79,6 @@
             <li><a href="#layanan">Layanan</a></li>
 
             <li><a href="persyaratan">Persyaratan</a></li>
-            <li><a href="#proses">Proses</a></li>
-
-            <li><a href="#testimoni">Testimoni</a></li>
 
             <?php if (session()->get('isLoggedIn')): ?>
             <li><a href="javascript:void(0)" onclick="openProfileSidebar()" style="color: #2563eb; font-weight: bold;">

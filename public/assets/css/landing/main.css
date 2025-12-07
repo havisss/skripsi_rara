@@ -621,7 +621,7 @@ a {
 .cta-section {
   position: relative; /* Penting untuk overlay */
   padding: 100px 5%;
-
+  background-image: url('../../footer.webp');
   text-align: center;
   color: #fff;
   overflow: hidden;
