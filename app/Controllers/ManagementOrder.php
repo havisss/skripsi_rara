@@ -122,35 +122,79 @@ class ManagementOrder extends BaseController
         return view('dashboard/order_detail', $data);
     }
 
+    
+
     // --- PROSES VERIFIKASI ---
     public function process()
     {
-        $appModel = new ApplicationModel();
+        $appModel = new \App\Models\ApplicationModel();
         
+        // Ambil data dari form detail
         $id = $this->request->getPost('id');
-        $action = $this->request->getPost('action'); 
-        $note = $this->request->getPost('admin_note'); 
-
-        $status = 'pending';
+        $action = $this->request->getPost('action'); // approve / reject / revision
+        $note = $this->request->getPost('note');
         
-        if ($action == 'approve') {
-            $status = 'approved';
-        } elseif ($action == 'revision') {
-            $status = 'revision_needed';
-        } elseif ($action == 'reject') {
-            $status = 'rejected';
+        // Validasi ID
+        $application = $appModel->find($id);
+        if (!$application) {
+            return redirect()->back()->with('error', 'Data order tidak ditemukan!');
         }
 
-        // Simpan ke Database
-        $appModel->update($id, [
-            'status' => $status,
-            'admin_note' => $note 
-        ]);
+        $updateData = [];
 
-        $msg = ($action == 'approve') ? 'Visa berhasil disetujui!' : 'Status berhasil diperbarui.';
+        // 1. Simpan Catatan Admin (Apapun statusnya, catat note-nya)
+        if (!empty($note)) {
+            $updateData['admin_note'] = $note;
+        }
+
+        // LOGIKA UTAMA: Cek Action
+        if ($action == 'approve') {
+            
+            // A. Ambil File Visa
+            $fileVisa = $this->request->getFile('visa_file');
+
+            // B. Cek Validitas File
+            if ($fileVisa && $fileVisa->isValid() && !$fileVisa->hasMoved()) {
+                // Buat folder jika belum ada (Opsional, jaga-jaga)
+                if (!is_dir('uploads/visas')) {
+                    mkdir('uploads/visas', 0777, true);
+                }
+
+                // Generate nama unik
+                $newName = 'VISA_' . $application['invoice_number'] . '_' . time() . '.' . $fileVisa->getExtension();
+                
+                // Pindah ke folder public/uploads/visas
+                $fileVisa->move('uploads/visas', $newName);
+                
+                // Simpan path ke database
+                $updateData['visa_file_path'] = 'uploads/visas/' . $newName;
+                
+                // Ubah status jadi APPROVED
+                $updateData['status'] = 'approved';
+                $updateData['approval_date'] = date('Y-m-d H:i:s');
+                
+                $msg = 'Order Disetujui! Visa berhasil dikirim ke User.';
+            } else {
+                // Error handling kalau lupa upload
+                return redirect()->back()->with('error', 'GAGAL: Untuk menyetujui, Anda WAJIB upload file Visa (PDF/JPG)!');
+            }
+
+        } elseif ($action == 'revision') {
+            $updateData['status'] = 'revision_needed';
+            $msg = 'Status diubah menjadi REVISI. User akan diberitahu.';
+            
+        } elseif ($action == 'reject') {
+            $updateData['status'] = 'rejected';
+            $msg = 'Permohonan Ditolak.';
+        } else {
+            return redirect()->back()->with('error', 'Pilih tindakan terlebih dahulu!');
+        }
+
+        // Eksekusi Update ke Database
+        $appModel->update($id, $updateData);
+
         return redirect()->to('/dashboard/managementorder/detail/' . $id)->with('success', $msg);
     }
-
     // --- CREATE MANUAL ---
     public function create()
     {
