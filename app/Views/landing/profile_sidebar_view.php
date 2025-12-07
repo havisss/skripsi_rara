@@ -1,5 +1,5 @@
 <style>
-/* CSS Scoping */
+/* CSS Scoping - Agar tidak merusak layout utama */
 .profile-sidebar * {
     box-sizing: border-box;
 }
@@ -83,7 +83,7 @@
     background: #fff;
 }
 
-/* COMPONENTS */
+/* COMPONENTS: STATUS CARD */
 .profile-sidebar .visa-status-card {
     background: #fff;
     border: 1px solid #cbd5e1;
@@ -148,13 +148,13 @@
     border: 1px solid #fecaca;
 }
 
-/* [NEW] STYLE KHUSUS REVISI */
 .status-revision {
     background: #fff1f2;
     color: #be123c;
     border: 1px solid #fda4af;
 }
 
+/* REVISI BOX */
 .revision-box {
     background: #fff5f5;
     border: 1px solid #f5c6cb;
@@ -162,7 +162,6 @@
     padding: 15px;
     margin-bottom: 15px;
     animation: pulse 2s infinite;
-    /* Efek Berdenyut */
 }
 
 .revision-header {
@@ -218,7 +217,6 @@
     background: #16a34a;
 }
 
-/* Timeline Warning untuk Revisi */
 .profile-sidebar .timeline-item.warning::before {
     background: #be123c;
     box-shadow: 0 0 0 4px rgba(190, 18, 60, 0.2);
@@ -281,7 +279,6 @@
     transform: translateY(-2px);
 }
 
-/* Tombol WA Revisi */
 .profile-sidebar .btn-wa-revision {
     display: block;
     width: 100%;
@@ -320,6 +317,52 @@
     text-decoration: none;
 }
 
+/* [NEW] GALLERY & PREVIEW STYLES */
+.profile-sidebar .visa-gallery-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.profile-sidebar .preview-container {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+}
+
+.profile-sidebar .preview-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.profile-sidebar .btn-download {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.profile-sidebar .btn-download:hover {
+    background: #157347;
+    transform: translateY(-2px);
+}
+
 /* FORM */
 .profile-sidebar .form-group {
     margin-bottom: 15px;
@@ -350,7 +393,6 @@
     cursor: pointer;
 }
 
-/* ANIMASI DENYUT */
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
@@ -382,6 +424,7 @@
     <div id="tab-status" class="tab-content active">
         <?php if ($latest_app): ?>
         <div class="visa-status-card">
+
             <div class="visa-header">
                 <span>#<?= $latest_app['invoice_number'] ?></span>
                 <span><?= date('d M Y', strtotime($latest_app['created_at'])) ?></span>
@@ -389,22 +432,19 @@
             <div class="visa-title"><?= $latest_app['visa_name'] ?></div>
 
             <?php
-                    $s = $latest_app['status'];
-                    $badgeClass = 'status-process'; $statusText = 'Diproses';
-                    
-                    if (in_array($s, ['payment_pending', 'upload_pending'])) { 
-                        $badgeClass = 'status-pending'; $statusText = 'MENUNGGU USER'; 
-                    }
-                    elseif ($s == 'approved') { 
-                        $badgeClass = 'status-approved'; $statusText = 'DISETUJUI'; 
-                    }
-                    elseif ($s == 'rejected') { 
-                        $badgeClass = 'status-rejected'; $statusText = 'DITOLAK'; 
-                    }
-                    elseif ($s == 'revision_needed') { 
-                        $badgeClass = 'status-revision'; $statusText = 'PERLU REVISI'; 
-                    }
-                ?>
+                $s = $latest_app['status'];
+                $badgeClass = 'status-process'; $statusText = 'Diproses';
+                
+                if (in_array($s, ['payment_pending', 'upload_pending'])) { 
+                    $badgeClass = 'status-pending'; $statusText = 'MENUNGGU USER'; 
+                } elseif ($s == 'approved') { 
+                    $badgeClass = 'status-approved'; $statusText = 'DISETUJUI'; 
+                } elseif ($s == 'rejected') { 
+                    $badgeClass = 'status-rejected'; $statusText = 'DITOLAK'; 
+                } elseif ($s == 'revision_needed') { 
+                    $badgeClass = 'status-revision'; $statusText = 'PERLU REVISI'; 
+                }
+            ?>
             <span class="status-badge <?= $badgeClass ?>"><?= $statusText ?></span>
 
             <div class="timeline">
@@ -431,7 +471,46 @@
 
             <div class="action-area">
 
-                <?php if ($s == 'revision_needed'): ?>
+                <?php if ($s == 'approved'): ?>
+
+                <?php if (!empty($latest_app['visa_file_path'])): ?>
+                <?php 
+                            $fileUrl = base_url($latest_app['visa_file_path']);
+                            $ext = pathinfo($latest_app['visa_file_path'], PATHINFO_EXTENSION);
+                            $isImage = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif']);
+                        ?>
+
+                <div class="visa-gallery-card">
+                    <h4 style="margin: 0 0 15px 0; font-size: 1rem; color: #198754; font-weight: bold;">
+                        <i class="fa-solid fa-circle-check"></i> VISA APPROVED
+                    </h4>
+
+                    <div class="preview-container">
+                        <?php if ($isImage): ?>
+                        <img src="<?= $fileUrl ?>" alt="E-Visa Preview">
+                        <?php else: ?>
+                        <div style="padding: 20px 0;">
+                            <i class="fa-solid fa-file-pdf" style="font-size: 40px; color: #dc3545;"></i>
+                            <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: #666;">Dokumen PDF</p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <a href="<?= $fileUrl ?>" class="btn-download" download target="_blank">
+                        <i class="fa-solid fa-download"></i> DOWNLOAD E-VISA
+                    </a>
+                </div>
+
+                <?php else: ?>
+                <div class="alert-box"
+                    style="background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; padding: 15px; border-radius: 8px; text-align: center;">
+                    <i class="fa-solid fa-clock" style="font-size: 24px; margin-bottom: 10px;"></i><br>
+                    <strong>Visa Disetujui!</strong><br>
+                    <span style="font-size: 0.85rem;">Dokumen sedang disiapkan oleh admin. Silakan cek berkala.</span>
+                </div>
+                <?php endif; ?>
+
+                <?php elseif ($s == 'revision_needed'): ?>
                 <div class="revision-box">
                     <div class="revision-header">
                         <i class="fa-solid fa-triangle-exclamation"></i> PERHATIAN: Revisi Diperlukan
@@ -441,24 +520,21 @@
                     </div>
 
                     <?php
-                            // Link WA Otomatis untuk Revisi
-                            $waNumber = '6281188090025'; // Ganti dengan nomor Admin
-                            $waMsg = "Halo Admin, saya ingin melakukan revisi dokumen untuk Invoice #" . $latest_app['invoice_number'] . ". Mohon panduannya.";
+                            $waNumber = '6281188090025'; 
+                            $waMsg = "Halo Admin, saya ingin melakukan revisi dokumen untuk Invoice #" . $latest_app['invoice_number'];
                             $waLink = "https://wa.me/{$waNumber}?text=" . urlencode($waMsg);
                         ?>
-
                     <a href="<?= $waLink ?>" target="_blank" class="btn-wa-revision">
                         <i class="fa-brands fa-whatsapp"></i> Hubungi Admin untuk Revisi
                     </a>
                 </div>
-                <?php endif; ?>
-                <?php if ($latest_app['payment_status'] == 'unpaid'): ?>
+
+                <?php elseif ($latest_app['payment_status'] == 'unpaid'): ?>
                 <a href="<?= base_url('booking/success/' . $latest_app['invoice_number']) ?>" class="btn-pay">
                     <i class="fa-solid fa-money-bill-wave"></i> Bayar Tagihan Sekarang
                 </a>
-                <?php endif; ?>
 
-                <?php if (!empty($missing_docs) && $s != 'revision_needed'): ?>
+                <?php elseif (!empty($missing_docs)): ?>
                 <div class="alert-box">
                     <div style="font-weight:bold; color:#be123c; font-size:0.9rem; margin-bottom:5px;">
                         <i class="fa-solid fa-circle-exclamation"></i> Dokumen Kurang:
@@ -471,6 +547,12 @@
                     <a href="<?= base_url('booking') ?>" class="btn-upload">
                         <i class="fa-solid fa-upload"></i> Upload Dokumen
                     </a>
+                </div>
+
+                <?php else: ?>
+                <div style="text-align: center; padding: 20px 0; color: #64748b;">
+                    <i class="fa-solid fa-hourglass-half" style="margin-bottom: 5px;"></i>
+                    <p style="margin:0; font-size:0.9rem;">Menunggu verifikasi admin...</p>
                 </div>
                 <?php endif; ?>
 
