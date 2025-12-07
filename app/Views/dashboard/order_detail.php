@@ -10,7 +10,6 @@
                     style="text-decoration:none; color:#666; font-size:14px; margin-bottom:10px; display:inline-block;">
                     <i class="fas fa-arrow-left"></i> Kembali ke List
                 </a>
-
                 <h1 class="page-title">Detail Order #<?= $order['invoice_number'] ?></h1>
             </div>
 
@@ -21,6 +20,7 @@
                     'revision_needed' => ['bg' => '#f8d7da', 'color' => '#842029', 'text' => 'REVISION NEEDED'],
                     'verification_process' => ['bg' => '#cff4fc', 'color' => '#055160', 'text' => 'VERIFICATION'],
                     'rejected' => ['bg' => '#f8d7da', 'color' => '#842029', 'text' => 'REJECTED'],
+                    'upload_pending' => ['bg' => '#ffe69c', 'color' => '#856404', 'text' => 'UPLOAD PENDING'],
                 ];
                 $currentStatus = $badges[$order['status']] ?? ['bg' => '#e2e3e5', 'color' => '#41464b', 'text' => strtoupper(str_replace('_', ' ', $order['status']))];
             ?>
@@ -36,7 +36,13 @@
         </div>
         <?php endif; ?>
 
-        <div class="dashboard-grid" style="grid-template-columns: 1fr 2fr; gap: 20px;">
+        <?php if (session()->getFlashdata('error')) : ?>
+        <div style="background: #f8d7da; color: #842029; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i> <?= session()->getFlashdata('error') ?>
+        </div>
+        <?php endif; ?>
+
+        <div class="dashboard-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
 
             <div class="card" style="height: fit-content;">
                 <div class="card-header">
@@ -61,11 +67,10 @@
 
                     <?php
                         $hp = $order['phone_number'];
-                        // Ubah format 08xxx atau +62xxx menjadi 62xxx agar API WA jalan
+                        // Fix format nomor WA
                         $hp = preg_replace('/^0/', '62', $hp);
                         $hp = preg_replace('/^\+/', '', $hp);
 
-                        // Template Pesan WA
                         $pesan = "Halo kak {$order['full_name']}, kami dari Bali Fantastic Visas ingin mengonfirmasi permohonan visa #{$order['invoice_number']} Anda.";
                         $waLink = "https://wa.me/{$hp}?text=" . urlencode($pesan);
                     ?>
@@ -113,32 +118,57 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-gavel"></i> Keputusan Admin</h3>
+                <div class="card" style="border: 2px solid #0d6efd;">
+                    <div class="card-header" style="background: #0d6efd; color: white;">
+                        <h3 style="color: white; margin: 0;"><i class="fas fa-gavel"></i> Proses & Upload Visa</h3>
                     </div>
                     <div style="padding: 20px;">
-                        <p style="margin-bottom: 15px; color: #666;">Silakan periksa dokumen di atas sebelum mengambil
-                            keputusan.</p>
+                        <p style="margin-bottom: 15px; color: #666; font-size: 13px;">
+                            Pilih tindakan "Approve" untuk memunculkan kolom upload Visa. File akan otomatis terkirim ke
+                            User.
+                        </p>
 
-                        <div style="display: flex; gap: 10px;">
-                            <form action="<?= base_url('dashboard/managementorder/process') ?>" method="post"
-                                style="flex: 1;">
-                                <input type="hidden" name="id" value="<?= $order['id'] ?>">
-                                <input type="hidden" name="action" value="approve">
-                                <button type="submit" class="btn btn-primary"
-                                    style="width: 100%; background: #28a745; border-color: #28a745; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer;"
-                                    onclick="return confirm('Yakin setujui visa ini?')">
-                                    <i class="fas fa-check"></i> Setujui (Approve)
-                                </button>
-                            </form>
+                        <form action="<?= base_url('dashboard/managementorder/process') ?>" method="post"
+                            enctype="multipart/form-data">
 
-                            <button type="button" class="btn btn-warning"
-                                style="flex: 1; color: #000; background: #ffc107; border: none; padding: 10px; border-radius: 5px; cursor: pointer;"
-                                onclick="document.getElementById('revisionModal').style.display='flex'">
-                                <i class="fas fa-edit"></i> Minta Revisi
+                            <input type="hidden" name="id" value="<?= $order['id'] ?>">
+
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Keputusan
+                                    Admin:</label>
+                                <select name="action" id="actionSelect" class="form-control"
+                                    onchange="toggleUploadInput()"
+                                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    <option value="" disabled selected>-- Pilih Status --</option>
+                                    <option value="revision">Minta Revisi (Dokumen Salah)</option>
+                                    <option value="approve">VISA JADI (Approve & Upload)</option>
+                                    <option value="reject">Tolak Permohonan (Reject)</option>
+                                </select>
+                            </div>
+
+                            <div id="uploadArea"
+                                style="display:none; background: #e8f5e9; padding: 15px; border: 1px dashed #2e7d32; border-radius: 8px; margin-bottom: 15px;">
+                                <label style="color: #198754; font-weight: bold; display: block; margin-bottom: 5px;">
+                                    <i class="fas fa-file-upload"></i> Upload File E-Visa (Wajib PDF/JPG)
+                                </label>
+                                <input type="file" name="visa_file" class="form-control"
+                                    style="width: 100%; font-size: 14px;">
+                                <small style="color: #666;">File ini akan muncul di dashboard user.</small>
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Catatan
+                                    (Opsional):</label>
+                                <textarea name="note" rows="3" placeholder="Pesan untuk user..."
+                                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%; padding: 12px; background: #0d6efd; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+                                <i class="fas fa-save"></i> SIMPAN KEPUTUSAN
                             </button>
-                        </div>
+
+                        </form>
                     </div>
                 </div>
 
@@ -147,60 +177,27 @@
     </div>
 </div>
 
-<div id="revisionModal"
-    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-    <div
-        style="background:white; width:500px; padding:30px; border-radius:10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: slideDown 0.3s ease;">
-        <h3 style="margin-top: 0;">Alasan Revisi / Penolakan</h3>
-        <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Pesan ini akan muncul di dashboard user (Sidebar).
-        </p>
-
-        <form action="<?= base_url('dashboard/managementorder/process') ?>" method="post">
-            <input type="hidden" name="id" value="<?= $order['id'] ?>">
-            <input type="hidden" name="action" value="revision">
-
-            <textarea name="admin_note" rows="4" required placeholder="Contoh: Foto paspor buram, mohon upload ulang..."
-                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; font-family: inherit;"></textarea>
-
-            <div style="text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
-                <button type="button" onclick="document.getElementById('revisionModal').style.display='none'"
-                    style="padding: 10px 20px; background: transparent; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">Batal</button>
-                <button type="submit"
-                    style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Kirim
-                    Revisi</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <script>
-// Script Tutup Modal kalau klik di luar area putih
-window.onclick = function(event) {
-    let modal = document.getElementById('revisionModal');
-    if (event.target == modal) {
-        modal.style.display = "none";
+function toggleUploadInput() {
+    var action = document.getElementById('actionSelect').value;
+    var uploadDiv = document.getElementById('uploadArea');
+
+    // Tampilkan kotak upload hanya jika pilih 'approve'
+    if (action === 'approve') {
+        uploadDiv.style.display = 'block';
+    } else {
+        uploadDiv.style.display = 'none';
     }
 }
 </script>
 
 <style>
-@keyframes slideDown {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Responsive Layout */
+/* Responsive Fix */
 @media (max-width: 768px) {
     .dashboard-grid {
         grid-template-columns: 1fr !important;
     }
 }
 </style>
+
 <?= $this->endSection() ?>
