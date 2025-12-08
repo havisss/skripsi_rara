@@ -269,51 +269,6 @@
     </div>
 </section>
 
-<section class="testimonials" id="testimoni">
-    <div class="section-title">
-        <h2>Apa Kata Mereka?</h2>
-        <p>Testimoni dari klien yang puas dengan layanan kami</p>
-    </div>
-    <div class="testimonial-grid">
-        <div class="testimonial-card">
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"Pelayanan sangat memuaskan! Proses cepat dan tim sangat responsif. Visa
-                turis Jepang saya disetujui dalam waktu 5 hari kerja."</p>
-            <div class="testimonial-author">
-                <div class="author-avatar">AS</div>
-                <div class="author-info">
-                    <h4>Andi Susanto</h4>
-                    <p>Visa Turis Jepang</p>
-                </div>
-            </div>
-        </div>
-        <div class="testimonial-card">
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"Recommended banget! Tim Bali Fantastic membantu saya dari awal sampai visa
-                approved. Sangat profesional dan terpercaya."</p>
-            <div class="testimonial-author">
-                <div class="author-avatar">RP</div>
-                <div class="author-info">
-                    <h4>Rina Puspita</h4>
-                    <p>Visa Bisnis Singapura</p>
-                </div>
-            </div>
-        </div>
-        <div class="testimonial-card">
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"Terima kasih Bali Fantastic! Visa pelajar ke Australia saya disetujui. Tim
-                sangat
-                membantu dalam persiapan dokumen."</p>
-            <div class="testimonial-author">
-                <div class="author-avatar">BW</div>
-                <div class="author-info">
-                    <h4>Budi Wibowo</h4>
-                    <p>Visa Pelajar Australia</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Ambil semua elemen tombol menu dan isi konten
