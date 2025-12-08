@@ -76,7 +76,7 @@
         <ul class="nav-menu" id="navMenu">
             <li><a href="/">Home</a></li>
 
-            <li><a href="#layanan">Layanan</a></li>
+            <li><a href="/#layanan">Layanan</a></li>
 
             <li><a href="persyaratan">Persyaratan</a></li>
 
