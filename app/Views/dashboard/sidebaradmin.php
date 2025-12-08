@@ -24,10 +24,9 @@
     <nav class="navbar">
         <div class="navbar-right">
             <div class="user-profile">
-                <span class="user-name"><?= $user_name ?? 'ADMIN' ?></span>
+                <span class="user-name"><?= $user_name ?? 'ADMINkml' ?></span>
                 <img src="<?= base_url('assets/img/' . ($user_image ?? 'default-avatar.png')) ?>" alt="User"
                     onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($user_name ?? 'Admin') ?>&background=0d6efd&color=fff'">
-                <i class="fas fa-chevron-down"></i>
             </div>
         </div>
     </nav>

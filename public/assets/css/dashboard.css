@@ -132,16 +132,9 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
   padding: 5px 10px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border-left: 1px solid #eee; /* Garis pemisah tipis */
+  
   padding-left: 20px;
-}
-
-.user-profile:hover {
-  background: #f8f9fa;
 }
 
 .user-name {
@@ -208,14 +201,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
-  padding: 8px 15px;
-  border-radius: 25px;
   transition: all 0.3s ease;
-}
-
-.user-profile:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .user-profile img {

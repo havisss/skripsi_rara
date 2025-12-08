@@ -132,7 +132,7 @@ class Booking extends BaseController
         }
 
         // --- SETUP PESAN WHATSAPP ---
-        $adminPhone = '6281188090025'; // Ganti dengan nomor WhatsApp Admin Anda (format 62...)
+        $adminPhone = '6285655569842'; // Ganti dengan nomor WhatsApp Admin Anda (format 62...)
 
         $message = "Halo Admin Bali Fantastic, saya ingin konfirmasi pembayaran.\n\n";
         $message .= "No Invoice: *" . $transaction['invoice_number'] . "*\n";

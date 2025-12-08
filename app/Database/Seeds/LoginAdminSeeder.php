@@ -15,6 +15,13 @@ class LoginAdminSeeder extends Seeder
                 // Password: admin123
                 'password_hash' => password_hash('admin123', PASSWORD_DEFAULT),
                 'created_at'    => date('Y-m-d H:i:s'),
+            ],
+             [
+                'name'          => 'Taufik',
+                'email'         => 'admon@gmail.com',
+                // Password: admin123
+                'password_hash' => password_hash('admin111', PASSWORD_DEFAULT),
+                'created_at'    => date('Y-m-d H:i:s'),
             ]
         ];
 
