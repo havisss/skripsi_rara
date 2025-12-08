@@ -79,11 +79,6 @@
         <div class="login-right">
             <div class="login-bg-overlay"></div>
             <div class="login-bg-content">
-                <div class="bg-pattern">
-                    <i class="fas fa-passport"></i>
-                    <i class="fas fa-plane-departure"></i>
-                    <i class="fas fa-map-location-dot"></i>
-                </div>
                 <h2 class="bg-title">Jelajahi Dunia Tanpa Batas</h2>
                 <p class="bg-description">Layanan pengurusan visa profesional, cepat, dan transparan untuk perjalanan
                     impian Anda.</p>
