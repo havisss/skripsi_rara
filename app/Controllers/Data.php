@@ -273,4 +273,18 @@ class Data extends BaseController
         $writer->save('php://output');
         exit;
     }
+    // --- FITUR BARU: AMBIL HISTORY VIA AJAX ---
+    public function getHistory($userId)
+    {
+        $appModel = new \App\Models\ApplicationModel();
+
+        // Ambil semua order milik user tersebut
+        $history = $appModel->select('applications.*, visa_types.name as visa_name, visa_types.price')
+            ->join('visa_types', 'visa_types.id = applications.visa_type_id', 'left')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        return $this->response->setJSON($history);
+    }
 }

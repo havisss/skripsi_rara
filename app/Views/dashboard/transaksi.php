@@ -25,6 +25,9 @@
                             <th style="padding: 15px;">Layanan</th>
                             <th style="padding: 15px;">Tagihan</th>
                             <th style="padding: 15px;">Status Bayar</th>
+
+                            <th style="padding: 15px;">Bukti Transfer</th>
+
                             <th style="padding: 15px;">Tanggal</th>
                             <th style="padding: 15px; text-align: right;">Aksi</th>
                         </tr>
@@ -32,7 +35,7 @@
                     <tbody>
                         <?php if (empty($transactions)): ?>
                             <tr>
-                                <td colspan="7" class="text-center p-4">Belum ada transaksi.</td>
+                                <td colspan="8" class="text-center p-4">Belum ada transaksi.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($transactions as $trx): ?>
@@ -63,6 +66,18 @@
                                             </span>
                                         <?php endif; ?>
                                     </td>
+
+                                    <td style="padding: 15px;">
+                                        <?php if (!empty($trx['payment_proof'])): ?>
+                                            <a href="<?= base_url($trx['payment_proof']) ?>" target="_blank"
+                                                style="text-decoration: none; background: #e0f2fe; color: #0284c7; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600;">
+                                                <i class="fas fa-image"></i> Lihat Foto
+                                            </a>
+                                        <?php else: ?>
+                                            <span style="color: #94a3b8; font-size: 13px;">-</span>
+                                        <?php endif; ?>
+                                    </td>
+
                                     <td style="padding: 15px;">
                                         <?= date('d M Y', strtotime($trx['created_at'])) ?><br>
                                         <small class="text-muted"><?= date('H:i', strtotime($trx['created_at'])) ?></small>
@@ -70,15 +85,18 @@
                                     <td style="padding: 15px; text-align: right;">
                                         <?php if ($trx['payment_status'] == 'unpaid'): ?>
                                             <form action="<?= base_url('dashboard/transaksi/confirm') ?>" method="post"
-                                                onsubmit="return confirm('Konfirmasi pembayaran ini manual? Pastikan dana sudah masuk rekening.')">
+                                                onsubmit="return confirm('Apakah bukti pembayaran sudah valid?')">
                                                 <input type="hidden" name="id" value="<?= $trx['id'] ?>">
+
                                                 <button type="submit" class="btn btn-sm btn-success"
-                                                    title="Konfirmasi Pembayaran Manual">
-                                                    <i class="fas fa-check-double"></i> Confirm
+                                                    title="Konfirmasi Pembayaran Manual"
+                                                    style="background: #22c55e; border:none; padding: 8px 12px; border-radius: 6px; color: white; cursor: pointer;">
+                                                    <i class="fas fa-check"></i> Confirm
                                                 </button>
                                             </form>
                                         <?php else: ?>
-                                            <button class="btn btn-sm btn-secondary" disabled>
+                                            <button class="btn btn-sm btn-secondary" disabled
+                                                style="background: #e2e8f0; color: #64748b; border:none; padding: 8px 12px; border-radius: 6px;">
                                                 <i class="fas fa-lock"></i> Selesai
                                             </button>
                                         <?php endif; ?>

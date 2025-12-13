@@ -64,7 +64,7 @@ class ManagementOrder extends BaseController
 
         // 4. STATISTIK COUNTER
         $data['count_all'] = $db->table('applications')->countAllResults();
-        
+
         $data['count_pending'] = $db->table('applications')
             ->whereIn('status', ['payment_pending', 'upload_pending', 'verification_process'])
             ->countAllResults();
@@ -93,7 +93,7 @@ class ManagementOrder extends BaseController
     {
         $appModel = new ApplicationModel();
         $docModel = new ApplicationDocumentModel();
-        
+
         // A. Ambil Data Lengkap (User + Visa)
         $order = $appModel->select('applications.*, users.full_name, users.email, users.phone_number, users.nationality, visa_types.name as visa_name, visa_types.price')
             ->join('users', 'users.id = applications.user_id')
@@ -122,18 +122,19 @@ class ManagementOrder extends BaseController
         return view('dashboard/order_detail', $data);
     }
 
-    
 
+
+    // --- PROSES VERIFIKASI ---
     // --- PROSES VERIFIKASI ---
     public function process()
     {
         $appModel = new \App\Models\ApplicationModel();
-        
+
         // Ambil data dari form detail
         $id = $this->request->getPost('id');
-        $action = $this->request->getPost('action'); // approve / reject / revision
+        $action = $this->request->getPost('action');
         $note = $this->request->getPost('note');
-        
+
         // Validasi ID
         $application = $appModel->find($id);
         if (!$application) {
@@ -141,6 +142,7 @@ class ManagementOrder extends BaseController
         }
 
         $updateData = [];
+        $msg = ''; // Inisialisasi variabel pesan
 
         // 1. Simpan Catatan Admin (Apapun statusnya, catat note-nya)
         if (!empty($note)) {
@@ -149,40 +151,38 @@ class ManagementOrder extends BaseController
 
         // LOGIKA UTAMA: Cek Action
         if ($action == 'approve') {
-            
+
             // A. Ambil File Visa
             $fileVisa = $this->request->getFile('visa_file');
 
             // B. Cek Validitas File
             if ($fileVisa && $fileVisa->isValid() && !$fileVisa->hasMoved()) {
-                // Buat folder jika belum ada (Opsional, jaga-jaga)
+                // Buat folder jika belum ada
                 if (!is_dir('uploads/visas')) {
                     mkdir('uploads/visas', 0777, true);
                 }
 
                 // Generate nama unik
                 $newName = 'VISA_' . $application['invoice_number'] . '_' . time() . '.' . $fileVisa->getExtension();
-                
+
                 // Pindah ke folder public/uploads/visas
                 $fileVisa->move('uploads/visas', $newName);
-                
+
                 // Simpan path ke database
                 $updateData['visa_file_path'] = 'uploads/visas/' . $newName;
-                
+
                 // Ubah status jadi APPROVED
                 $updateData['status'] = 'approved';
                 $updateData['approval_date'] = date('Y-m-d H:i:s');
-                
+
                 $msg = 'Order Disetujui! Visa berhasil dikirim ke User.';
             } else {
-                // Error handling kalau lupa upload
+                // ERROR HANDLING: Stop proses jika file tidak ada/invalid
                 return redirect()->back()->with('error', 'GAGAL: Untuk menyetujui, Anda WAJIB upload file Visa (PDF/JPG)!');
             }
-
         } elseif ($action == 'revision') {
             $updateData['status'] = 'revision_needed';
             $msg = 'Status diubah menjadi REVISI. User akan diberitahu.';
-            
         } elseif ($action == 'reject') {
             $updateData['status'] = 'rejected';
             $msg = 'Permohonan Ditolak.';
@@ -190,10 +190,15 @@ class ManagementOrder extends BaseController
             return redirect()->back()->with('error', 'Pilih tindakan terlebih dahulu!');
         }
 
-        // Eksekusi Update ke Database
-        $appModel->update($id, $updateData);
-
-        return redirect()->to('/dashboard/managementorder/detail/' . $id)->with('success', $msg);
+        // --- BUG FIX: CEGAH UPDATE JIKA DATA KOSONG ---
+        // Error "There is no data to update" terjadi jika $updateData kosong tapi dipaksa update.
+        if (!empty($updateData)) {
+            $appModel->update($id, $updateData);
+            return redirect()->to('/dashboard/managementorder/detail/' . $id)->with('success', $msg);
+        } else {
+            // Jika sampai sini berarti tidak ada action yang diambil atau hanya note kosong
+            return redirect()->back()->with('error', 'Tidak ada perubahan data yang disimpan.');
+        }
     }
     // --- CREATE MANUAL ---
     public function create()

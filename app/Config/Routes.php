@@ -41,6 +41,7 @@ $routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
     $routes->get('data', 'Data::index');
     $routes->post('data/add', 'Data::add');      // Proses Simpan Klien Baru
     $routes->get('data/export', 'Data::export');
+    $routes->get('data/getHistory/(:num)', 'Data::getHistory/$1');
 
     $routes->post('managementservice/req/save', 'ManagementService::saveRequirement');
     $routes->post('managementservice/req/update', 'ManagementService::updateRequirement');
@@ -77,4 +78,5 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // [BARU] Route untuk Proses Update Profil
     $routes->post('/myprofile/update', 'MyProfile::update');
+    $routes->post('/booking/upload-payment', 'Booking::uploadPayment');
 });
